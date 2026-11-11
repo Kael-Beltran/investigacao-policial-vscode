@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Investigação Policial – Investigadores</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='investigadores.css') }}">
+<style>
+
+</style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='site.css') }}">
+</head>
+<body class="site">
+
+{% set ativo = 'investigadores' %}
+{% include '_cabecalho.html' %}
+
+<div class="container">
+    <h1>Banco de Dados: <span class="red">Investigadores</span></h1>
+
+    {% if investigadores %}
+        {% for inv in investigadores %}
+        <div class="investigator-card">
+            <h3>{{ inv.nome }}</h3>
+            <p><strong>ID / Badge:</strong> {{ inv.id }}</p>
+            <p><strong>Cargo / Patente:</strong> {{ inv.cargo }}</p>
+            <!-- Ajuste os campos abaixo conforme as colunas reais da sua tabela 'investigadores' no PostgreSQL -->
+            <p><strong>Email:</strong> {{ inv.email }}</p>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>Nenhum investigador registrado no sistema no momento.</p>
+    {% endif %}
+
+    <a class="back-btn" href="{{ url_for('home') }}">Voltar à Página Inicial
+        <span><svg width="18" height="12" viewBox="0 0 18 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M0 6h16M11 1l5 5-5 5"/></svg></span>
+    </a>
+</div>
+
+</body>
+</html>

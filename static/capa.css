@@ -1,0 +1,271 @@
+/* ==========================================
+   NOVA CAPA — preto e vermelho
+   Todas as classes começam com "capa-" para não
+   conflitar com o style.css das outras páginas.
+========================================== */
+
+.capa {
+  --c-bg: #0c0c0d;
+  --c-ink: #f4f4f2;
+  --c-muted: #8c8c90;
+  --c-red: #e84545;
+  --c-red2: #b81f26;
+  --c-line: #2a2a2d;
+  --w: clamp(250px, 22vw, 330px); /* largura da lupa */
+
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 32px 48px;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  overflow: hidden;
+  color: var(--c-ink);
+  font:400 15px/1.5 "Manrope", sans-serif;
+  background: radial-gradient(120% 90% at 30% 100%, #17171a 0%, var(--c-bg) 60%);
+}
+
+.capa a { color: inherit; text-decoration: none; }
+.capa a:focus-visible { outline: 2px solid var(--c-red); outline-offset: 4px; }
+
+/* Retângulo vermelho central */
+.capa-slab {
+  position: absolute;
+  left: 58%;
+  top: 0;
+  width: clamp(100px, 10.5vw, 150px);
+  height: 62%;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, #f05555 0%, var(--c-red2) 100%);
+  animation: capa-rise 1s cubic-bezier(.2, .8, .2, 1) both;
+}
+@keyframes capa-rise { from { height: 0; } to { height: 62%; } }
+
+/* Lupa (imagem) — a lente fica centralizada no retângulo */
+.capa-icon {
+  position: absolute;
+  z-index: 2;
+  left: calc(58% - var(--w) * .672);
+  top: calc(33% - var(--w) * .327);
+  width: var(--w);
+}
+.capa-icon img { display: block; width: 100%; height: auto; }
+
+.capa-tint,
+.capa-glass {
+  position: absolute;
+  left: 40.7%;
+  top: 4.5%;
+  width: 53.1%;
+  height: 38.8%;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.capa-tint {
+  background: #e8323c;
+  mix-blend-mode: multiply;
+  opacity: 0;
+  animation: capa-fade .8s .6s forwards;
+}
+@keyframes capa-fade { to { opacity: 1; } }
+
+.capa-sweep {
+  position: absolute;
+  left: 0; right: 0; top: 0;
+  height: 3px;
+  background: #fff;
+  box-shadow: 0 0 14px 2px rgba(255, 255, 255, .8);
+  opacity: 0;
+  animation: capa-sweep 1.8s 1s ease-in-out 1 both;
+}
+@keyframes capa-sweep {
+  0%   { top: 0; opacity: 0; }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+/* Topo */
+.capa-top {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.capa-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 17px;
+}
+.capa-logo i { width: 10px; height: 10px; background: var(--c-red); display: block; }
+.capa-hot { font-size: 13px; color: var(--c-muted); }
+.capa-hot b { color: var(--c-ink); font-weight: 700; font-size: 15px; margin-left: 6px; }
+
+/* Centro */
+.capa-mid {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: 200px 1fr 190px;
+  align-items: center;
+  gap: 24px;
+}
+.capa-side { font-size: 12.5px; color: var(--c-muted); line-height: 1.6; }
+.capa-side strong { color: var(--c-ink); font-weight: 500; }
+.capa-dash { display: block; width: 16px; height: 2px; background: var(--c-red); margin: 10px 0 14px; }
+
+.capa-title {
+  margin: 0 0 36px;
+  max-width: 7.5em;
+  font-weight: 500;
+  font-size: clamp(40px, 5.2vw, 70px);
+  line-height: 1.04;
+  letter-spacing: -.025em;
+  text-transform: none;
+  color: var(--c-ink);
+}
+.capa-note {
+  max-width: 34ch;
+  margin: 0 0 40px;
+  padding-left: 14px;
+  border-left: 2px solid var(--c-red);
+  color: var(--c-muted);
+  font-size: 13.5px;
+}
+.capa-note b { color: var(--c-ink); font-weight: 500; }
+
+.capa-more { display: inline-flex; align-items: center; gap: 18px; font-size: 13px; font-weight: 600; }
+.capa-more span {
+  width: 52px; height: 52px;
+  display: grid; place-items: center;
+  border: 1px solid #55555a;
+  border-radius: 50%;
+  transition: background .2s, border-color .2s;
+}
+.capa-more:hover span { background: var(--c-red); border-color: var(--c-red); }
+
+/* Menu lateral */
+.capa-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 22px;
+  width: 100%;
+  display: grid;
+  gap: 22px;
+  justify-self: end;
+  text-align: right;
+  border-left: 1px solid var(--c-line);
+}
+.capa-menu a {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  font-size: 12.5px;
+  color: var(--c-muted);
+}
+.capa-menu a::after { content: ""; width: 5px; height: 5px; border-radius: 50%; background: #55555a; }
+.capa-menu a:hover,
+.capa-menu a[aria-current] { color: var(--c-ink); }
+.capa-menu a:hover::after,
+.capa-menu a[aria-current]::after { background: var(--c-red); }
+
+/* Rodapé da capa */
+.capa-bot {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: end;
+  font-size: 12.5px;
+  color: var(--c-muted);
+}
+.capa-next { text-align: center; color: var(--c-ink); }
+.capa-next svg { display: block; margin: 4px auto 0; }
+.capa-link { justify-self: end; }
+.capa-link:hover { color: var(--c-ink); }
+
+/* Telas médias: some o texto lateral esquerdo */
+@media (max-width: 1200px) {
+  .capa-mid { grid-template-columns: 1fr 190px; }
+  .capa-side { display: none; }
+}
+
+/* Celular */
+@media (max-width: 900px) {
+  .capa { padding: 22px 22px 26px; }
+  .capa-mid { grid-template-columns: 1fr; align-content: start; padding: 28px 0 230px; gap: 20px; }
+  .capa-menu {
+    order: -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+    padding: 0;
+    border: 0;
+    text-align: left;
+  }
+  .capa-menu a { justify-content: flex-start; }
+  .capa-menu a::after { display: none; }
+  .capa-menu a[aria-current] { color: var(--c-red); }
+  .capa-slab { left: 50%; width: 80px; height: 66%; }
+  @keyframes capa-rise { from { height: 0; } to { height: 66%; } }
+  .capa-icon { --w: min(40vw, 170px); top: auto; bottom: 70px; left: calc(50% - var(--w) * .672); }
+  .capa-hot { display: none; }
+  .capa-bot { grid-template-columns: 1fr auto; }
+  .capa-next { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .capa-slab, .capa-sweep { animation: none; }
+  .capa-sweep { display: none; }
+  .capa-tint { animation: none; opacity: 1; }
+}
+
+
+/* Tipografia e paleta unificadas com a capa */
+html, body { font-family: "Manrope", sans-serif; }
+body { background-color: #0c0c0d; color: #f4f4f2; }
+
+
+/* Ajuste de ícones */
+
+.icon-text,
+.nav-item,
+.menu-item,
+.feature-item,
+.card-icon,
+.action-icon,
+.form-label,
+label {
+  align-items: center;
+}
+
+.icon-text,
+.nav-item,
+.menu-item,
+.feature-item,
+.card-icon,
+.action-icon {
+  display: inline-flex;
+  gap: 10px;
+}
+
+.nav-item svg,
+.menu-item svg,
+.feature-item svg,
+.card-icon svg,
+.action-icon svg,
+.icon-text svg,
+.nav-item i,
+.menu-item i,
+.feature-item i,
+.card-icon i,
+.action-icon i,
+.icon-text i {
+  flex: 0 0 auto;
+  display: inline-block;
+  vertical-align: middle;
+}

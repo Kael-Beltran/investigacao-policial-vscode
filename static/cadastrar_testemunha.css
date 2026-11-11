@@ -1,0 +1,691 @@
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    color-scheme: dark;
+
+    --bg: #0c0c0d;
+    --surface: #18181a;
+    --surface-soft: #202024;
+    --line: rgba(255,255,255,.11);
+
+    --text: #f4f4f2;
+    --muted: #8c8c90;
+
+    --red: #e84545;
+    --red-dark: #b81f26;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    padding: 34px 22px;
+
+    display: grid;
+    place-items: center;
+
+    color: var(--text);
+
+    background:
+        radial-gradient(
+            ellipse at 12% 12%,
+            rgba(130, 22, 29, .17),
+            transparent 34%
+        ),
+        radial-gradient(
+            ellipse at 90% 90%,
+            rgba(130, 22, 29, .10),
+            transparent 32%
+        ),
+        var(--bg);
+
+    font-family:"Manrope",sans-serif;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+
+/* ==========================================
+   CONTAINER PRINCIPAL
+========================================== */
+
+.page-shell {
+    width: min(100%, 900px);
+    margin: auto;
+}
+
+
+/* ==========================================
+   TOPO
+========================================== */
+
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+    margin-bottom: 22px;
+    padding: 0 4px;
+}
+
+.brand {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 12px;
+
+    color: var(--text);
+
+    font-family:"Manrope",sans-serif;
+    font-size: 19px;
+
+    letter-spacing: .3px;
+}
+
+.brand b {
+    color: var(--red);
+    font-weight: 400;
+}
+
+.brand-mark {
+    display: grid;
+    place-items: center;
+
+    width: 38px;
+    height: 38px;
+
+    border: 1px solid rgba(255,255,255,.22);
+    border-radius: 7px;
+
+    color: var(--red);
+
+    font-family:"Manrope",sans-serif;
+    font-size: 20px;
+}
+
+.back-link {
+    padding: 11px 15px;
+
+    border: 1px solid var(--line);
+    border-radius: 5px;
+
+    color: #ded9d5;
+
+    font: 600 11px "Manrope", sans-serif;
+
+    transition:
+        border-color .2s,
+        background .2s,
+        transform .2s;
+}
+
+.back-link:hover {
+    border-color: var(--red);
+    background: rgba(227,38,45,.08);
+
+    transform: translateY(-1px);
+}
+
+.back-link span {
+    margin-left: 8px;
+    color: var(--red);
+}
+
+
+/* ==========================================
+   CARD DO FORMULÁRIO
+========================================== */
+
+.form-card {
+    width: min(100%, 700px);
+
+    margin: 0 auto;
+    padding: clamp(26px, 5vw, 48px);
+
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 13px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(31,31,34,.98),
+            rgba(20,20,23,.98)
+        );
+
+    box-shadow:
+        0 24px 70px rgba(0,0,0,.38);
+}
+
+
+/* ==========================================
+   CABEÇALHO DO FORMULÁRIO
+========================================== */
+
+.form-heading {
+    margin-bottom: 32px;
+}
+
+.section-tag {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 9px;
+
+    color: var(--red);
+
+    font: 600 10px "Manrope", sans-serif;
+
+    letter-spacing: 1.5px;
+}
+
+.section-tag i {
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: var(--red);
+
+    box-shadow:
+        0 0 12px rgba(227,38,45,.65);
+}
+
+.section-tag span {
+    color: var(--muted);
+}
+
+.form-heading h1 {
+    margin: 15px 0 10px;
+
+    font:
+        400 clamp(38px, 6vw, 55px)/1.06
+        "Manrope",
+        sans-serif;
+
+    letter-spacing: .2px;
+    text-transform: uppercase;
+}
+
+.form-heading h1 em {
+    color: var(--red);
+    font-style: normal;
+}
+
+.form-heading p {
+    max-width: 510px;
+
+    margin: 0;
+
+    color: #b9b3af;
+
+    font:
+        13px/1.8
+        "Manrope",
+        sans-serif;
+}
+
+
+/* ==========================================
+   GRID
+========================================== */
+
+.form-grid {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 21px 18px;
+}
+
+
+/* ==========================================
+   CAMPOS
+========================================== */
+
+.field {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 9px;
+}
+
+.field-full {
+    grid-column: 1 / -1;
+}
+
+.field label {
+    color: #e9e4df;
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.field label span,
+.required-note b {
+    color: var(--red);
+}
+
+
+/* Inputs */
+
+.field input,
+.field select,
+.field textarea {
+    width: 100%;
+    min-height: 48px;
+
+    padding: 13px 15px;
+
+    outline: none;
+
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 5px;
+
+    background: #252529;
+    color: var(--text);
+
+    font:
+        12px
+        "Manrope",
+        sans-serif;
+
+    transition:
+        border-color .2s,
+        box-shadow .2s,
+        background .2s;
+}
+
+
+/* Placeholder */
+
+.field input::placeholder,
+.field textarea::placeholder {
+    color: #777276;
+}
+
+
+/* Foco */
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+    border-color: var(--red);
+
+    background: #29282c;
+
+    box-shadow:
+        0 0 0 3px rgba(227,38,45,.12);
+}
+
+
+/* Campo inválido */
+
+.field input.invalid {
+    border-color: #ff555b;
+
+    box-shadow:
+        0 0 0 3px rgba(227,38,45,.12);
+}
+
+
+/* Data e select */
+
+.field input[type="date"],
+.field select {
+    color-scheme: dark;
+}
+
+.field select {
+    cursor: pointer;
+}
+
+.field select option {
+    background: #252529;
+    color: white;
+}
+
+
+/* Textarea */
+
+.field textarea {
+    min-height: 135px;
+
+    resize: vertical;
+
+    line-height: 1.7;
+}
+
+
+/* Dica */
+
+.field-hint {
+    margin-top: -2px;
+
+    color: #858084;
+
+    font:
+        10px
+        "Manrope",
+        sans-serif;
+}
+
+
+/* ==========================================
+   CAMPO CASO
+========================================== */
+
+.case-field {
+    position: relative;
+}
+
+.case-field input {
+    padding-left: 15px;
+}
+
+
+/* ==========================================
+   AVISO
+========================================== */
+
+.form-notice {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 11px;
+
+    margin: 25px 0 22px;
+    padding: 13px 14px;
+
+    border: 1px solid rgba(227,38,45,.22);
+    border-radius: 5px;
+
+    background: rgba(227,38,45,.055);
+}
+
+.notice-icon {
+    flex: 0 0 18px;
+
+    display: grid;
+    place-items: center;
+
+    width: 18px;
+    height: 18px;
+
+    border-radius: 50%;
+
+    background: var(--red);
+    color: white;
+
+    font:
+        700 11px
+        Arial,
+        sans-serif;
+}
+
+.form-notice p {
+    margin: 0;
+
+    color: #c4bdba;
+
+    font:
+        10px/1.7
+        "Manrope",
+        sans-serif;
+}
+
+
+/* ==========================================
+   BOTÃO
+========================================== */
+
+.submit-button {
+    width: 100%;
+    min-height: 51px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 14px;
+
+    border: 0;
+    border-radius: 5px;
+
+    background: var(--red);
+    color: white;
+
+    cursor: pointer;
+
+    font:
+        600 12px
+        "Manrope",
+        sans-serif;
+
+    transition:
+        background .2s,
+        transform .2s,
+        box-shadow .2s;
+}
+
+.submit-button:hover {
+    background: #c91d25;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 8px 25px rgba(227,38,45,.18);
+}
+
+.submit-button:active {
+    transform: translateY(0);
+}
+
+.button-arrow {
+    font-size: 18px;
+}
+
+
+/* ==========================================
+   MENSAGEM
+========================================== */
+
+.form-message {
+    min-height: 18px;
+
+    margin: 12px 0 0;
+
+    color: #ff777c;
+
+    font:
+        11px/1.6
+        "Manrope",
+        sans-serif;
+}
+
+.form-message.success {
+    color: #a6d6a8;
+}
+
+
+/* ==========================================
+   PARTE INFERIOR DO FORMULÁRIO
+========================================== */
+
+.form-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-top: 23px;
+    padding-top: 19px;
+
+    border-top: 1px solid var(--line);
+}
+
+.return-link {
+    color: #bdb7b3;
+
+    text-decoration: none;
+
+    font-size: 11px;
+
+    transition: color .2s;
+}
+
+.return-link:hover {
+    color: white;
+}
+
+.return-link span {
+    margin-right: 6px;
+
+    color: var(--red);
+}
+
+.required-note {
+    color: #858084;
+
+    font:
+        9px
+        "Manrope",
+        sans-serif;
+}
+
+
+/* ==========================================
+   RODAPÉ
+========================================== */
+
+.page-caption {
+    display: flex;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-top: 18px;
+    padding: 0 5px;
+
+    color: #777174;
+
+    font:
+        9px
+        "Manrope",
+        sans-serif;
+
+    letter-spacing: 1px;
+}
+
+.page-caption b {
+    margin-left: 5px;
+
+    color: var(--red);
+}
+
+
+/* ==========================================
+   RESPONSIVIDADE
+========================================== */
+
+@media (max-width: 600px) {
+
+    body {
+        padding: 22px 14px;
+        align-items: start;
+    }
+
+    .topbar {
+        margin-bottom: 17px;
+    }
+
+    .brand {
+        gap: 8px;
+        font-size: 15px;
+    }
+
+    .brand-mark {
+        width: 34px;
+        height: 34px;
+    }
+
+    .back-link {
+        padding: 9px 10px;
+        font-size: 9px;
+    }
+
+    .form-card {
+        padding: 25px 19px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .field-full {
+        grid-column: auto;
+    }
+
+    .form-heading h1 {
+        font-size: 36px;
+    }
+
+    .form-bottom,
+    .page-caption {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+/* Tipografia e paleta unificadas com a capa */
+html, body { font-family: "Manrope", sans-serif; }
+body { background-color: #0c0c0d; color: #f4f4f2; }
+
+
+/* Ajuste de ícones */
+
+.icon-text,
+.nav-item,
+.menu-item,
+.feature-item,
+.card-icon,
+.action-icon,
+.form-label,
+label {
+  align-items: center;
+}
+
+.icon-text,
+.nav-item,
+.menu-item,
+.feature-item,
+.card-icon,
+.action-icon {
+  display: inline-flex;
+  gap: 10px;
+}
+
+.nav-item svg,
+.menu-item svg,
+.feature-item svg,
+.card-icon svg,
+.action-icon svg,
+.icon-text svg,
+.nav-item i,
+.menu-item i,
+.feature-item i,
+.card-icon i,
+.action-icon i,
+.icon-text i {
+  flex: 0 0 auto;
+  display: inline-block;
+  vertical-align: middle;
+}

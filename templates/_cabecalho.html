@@ -1,0 +1,24 @@
+{# Cabeçalho único do site — mesmo visual da capa. Use: {% set ativo = 'casos' %} antes do include. #}
+<header class="capa-top site-top">
+  <a class="capa-logo" href="{{ url_for('home') }}"><i></i>Investigação Policial</a>
+
+  <ul class="capa-menu site-menu" aria-label="Principal">
+    <li><a href="{{ url_for('home') }}" {% if ativo == 'inicio' %}aria-current="page"{% endif %}>Início</a></li>
+    <li><a href="{{ url_for('pagina_casos') }}" {% if ativo == 'casos' %}aria-current="page"{% endif %}>Casos</a></li>
+    <li><a href="{{ url_for('pagina_investigadores') }}" {% if ativo == 'investigadores' %}aria-current="page"{% endif %}>Investigadores</a></li>
+    <li><a href="{{ url_for('pagina_suspeitos') }}" {% if ativo == 'suspeitos' %}aria-current="page"{% endif %}>Suspeitos</a></li>
+    <li><a href="{{ url_for('pagina_adicionar_informacoes') }}" {% if ativo == 'adicionar' %}aria-current="page"{% endif %}>Adicionar informações</a></li>
+  </ul>
+
+  <div class="capa-hot">Suporte<b>(0800) 123 45 67</b></div>
+</header>
+
+{% with mensagens = get_flashed_messages(with_categories=true) %}
+  {% if mensagens %}
+  <div class="aviso-site" role="status" aria-live="polite">
+    {% for categoria, texto in mensagens %}
+      <p class="aviso aviso-{{ categoria }}">{{ texto }}</p>
+    {% endfor %}
+  </div>
+  {% endif %}
+{% endwith %}

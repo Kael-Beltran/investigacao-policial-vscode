@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Adicionar Evidência | Investigação Policial</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='adicionar_evidencia.css') }}"
+    >
+    <link rel="stylesheet" href="{{ url_for('static', filename='site.css') }}">
+</head>
+
+<body class="site">
+
+    {% set ativo = 'adicionar' %}
+{% include '_cabecalho.html' %}
+
+<div class="page-back">
+    <a
+                href="{{ url_for('pagina_adicionar_informacoes') }}"
+                class="back-link"
+            >
+                Voltar ao painel <span>↗</span>
+            </a>
+</div>
+
+<main class="page-shell">
+
+
+        
+
+
+
+        <section class="form-card">
+
+            <div class="form-heading">
+
+                <div class="section-tag">
+                    <i></i>
+                    NOVO REGISTRO
+                    <span>/ EVIDÊNCIAS</span>
+                </div>
+
+                <h1>
+                    Adicionar <em>Evidência</em>
+                </h1>
+
+                <p>
+                    Registre uma nova evidência encontrada durante
+                    uma investigação e vincule-a ao caso correspondente.
+                </p>
+
+            </div>
+
+
+            <form
+                action="{{ url_for('salvar_evidencia') }}"
+                method="POST"
+                id="evidenceForm"
+            >
+
+                <div class="form-grid">
+
+
+                    <!-- DESCRIÇÃO -->
+
+                    <div class="field field-full">
+
+                        <label for="descricao">
+                            Descrição da evidência
+                            <span>*</span>
+                        </label>
+
+                        <textarea
+                            id="descricao"
+                            name="descricao"
+                            rows="6"
+                            placeholder="Descreva a evidência encontrada..."
+                            maxlength="3000"
+                            required
+                        ></textarea>
+
+                        <span class="field-hint">
+                            Informe detalhes relevantes sobre a evidência.
+                        </span>
+
+                    </div>
+
+
+                    <!-- TIPO -->
+
+                    <div class="field">
+
+                        <label for="tipo">
+                            Tipo de evidência
+                            <span>*</span>
+                        </label>
+
+                        <select
+                            id="tipo"
+                            name="tipo"
+                            required
+                        >
+
+                            <option value="" disabled selected>
+                                Selecione o tipo
+                            </option>
+
+                            <option value="Digital">
+                                Digital
+                            </option>
+
+                            <option value="Documento">
+                                Documento
+                            </option>
+
+                            <option value="Objeto">
+                                Objeto
+                            </option>
+
+                            <option value="Fotografia">
+                                Fotografia
+                            </option>
+
+                            <option value="Vídeo">
+                                Vídeo
+                            </option>
+
+                            <option value="Impressão digital">
+                                Impressão digital
+                            </option>
+
+                            <option value="Biológica">
+                                Biológica
+                            </option>
+
+                            <option value="Outro">
+                                Outro
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label for="local_encontrada">
+                            Local encontrada
+                            <span>*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            id="local_encontrada"
+                            name="local_encontrada"
+                            placeholder="Onde foi encontrada?"
+                            maxlength="300"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label for="data_coleta">
+                            Data da coleta
+                            <span>*</span>
+                        </label>
+
+                        <input
+                            type="date"
+                            id="data_coleta"
+                            name="data_coleta"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label for="caso_id">
+                            ID do caso
+                            <span>*</span>
+                        </label>
+
+                        <input
+                            type="number"
+                            id="caso_id"
+                            name="caso_id"
+                            placeholder="Ex.: 12"
+                            min="1"
+                            required
+                        >
+
+                        <span class="field-hint">
+                            Informe o ID do caso relacionado.
+                        </span>
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="form-notice">
+
+                    <span class="notice-icon">
+                        !
+                    </span>
+
+                    <p>
+                        Revise todas as informações antes de registrar.
+                        A evidência será vinculada ao caso informado.
+                    </p>
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="submit-button"
+                >
+
+                    ADICIONAR EVIDÊNCIA
+
+                    <span class="button-arrow">
+                        →
+                    </span>
+
+                </button>
+
+
+                <p
+                    class="form-message"
+                    id="formMessage"
+                ></p>
+
+
+                <div class="form-bottom">
+
+                    <a
+                        href="{{ url_for('pagina_adicionar_informacoes') }}"
+                        class="return-link"
+                    >
+
+                        <span>←</span>
+
+                        Voltar para registros
+
+                    </a>
+
+
+                    <span class="required-note">
+
+                        <b>*</b>
+                        Campos obrigatórios
+
+                    </span>
+
+                </div>
+
+            </form>
+
+        </section>
+
+        <footer class="page-caption">
+
+            <span>
+                CENTRAL DE INVESTIGAÇÕES · 2026
+            </span>
+
+            <span>
+                ACESSO CONTROLADO
+                <b>●</b>
+            </span>
+
+        </footer>
+
+    </main>
+
+</body>
+
+</html>

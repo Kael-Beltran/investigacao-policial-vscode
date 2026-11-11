@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Investigação Policial – Adicionar Informações</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='add_info.css') }}">
+<<<<<<< HEAD
+    <link rel="stylesheet" href="{{ url_for('static', filename='site.css') }}">
+=======
+>>>>>>> a05fbe918e5043a03f81487a1ba5540682f611d6
+</head>
+<body class="site">
+
+<<<<<<< HEAD
+{% set ativo = 'adicionar' %}
+{% include '_cabecalho.html' %}
+=======
+<header class="nav">
+  <a class="logo" href="{{ url_for('home') }}">Investigação<span> Policial</span></a>
+
+  <nav class="menu" aria-label="Principal">
+    <a href="{{ url_for('home') }}">Inicio</a>
+    <a href="{{ url_for('mostrar_casos') }}">Casos</a>
+    <a href="{{ url_for('mostrar_investigadores') }}">Investigadores</a>
+    <a href="{{ url_for('mostrar_suspeitos') }}">Suspeitos</a>
+    <a href="{{ url_for('pagina_adicionar_informacoes') }}" aria-current="page">Adicionar novas informações</a>
+  </nav>
+</header>
+>>>>>>> a05fbe918e5043a03f81487a1ba5540682f611d6
+
+<div class="container">
+    <h1>Painel de Controle: <span class="red">Adicionar Registros</span></h1>
+    <p>Selecione o tipo de registro que deseja inserir no banco de dados da investigação:</p>
+
+    <div class="grid-options">
+<<<<<<< HEAD
+        <a href="{{ url_for('pagina_novo_suspeito') }}" class="option-card">
+=======
+        <a href="{{ url_for('pagina_cadastrar_suspeito') }}" class="option-card">
+>>>>>>> a05fbe918e5043a03f81487a1ba5540682f611d6
+            <h3>Cadastrar Suspeito</h3>
+            <p>Adicionar novo suspeito, dados pessoais, CPF e vínculo com caso.</p>
+        </a>
+
+        <a href="{{ url_for('pagina_registrar_caso') }}" class="option-card">
+            <h3>Registrar Caso</h3>
+            <p>Abrir um novo dossiê de crime com descrição e tipo.</p>
+        </a>
+
+<<<<<<< HEAD
+        <a href="{{ url_for('pagina_nova_evidencia') }}" class="option-card">
+=======
+        <a href="{{ url_for('pagina_registrar_evidencia') }}" class="option-card">
+>>>>>>> a05fbe918e5043a03f81487a1ba5540682f611d6
+            <h3>Adicionar Evidência</h3>
+            <p>Registrar pistas, objetos ou vestígios encontrados na cena.</p>
+        </a>
+
+<<<<<<< HEAD
+        <a href="{{ url_for('pagina_nova_testemunha') }}" class="option-card">
+=======
+        <a href="{{ url_for('pagina_cadastrar_testemunha') }}" class="option-card">
+>>>>>>> a05fbe918e5043a03f81487a1ba5540682f611d6
+            <h3>Cadastrar Testemunha</h3>
+            <p>Adicionar depoimentos ou informações prestadas por testemunhas.</p>
+        </a>
+    </div>
+
+<<<<<<< HEAD
+    <a class="back-btn" href="{{ url_for('home') }}">Voltar à Página Inicial
+        <span><svg width="18" height="12" viewBox="0 0 18 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M0 6h16M11 1l5 5-5 5"/></svg></span>
+    </a>
+=======
+    <a class="back-btn" href="{{ url_for('home') }}">Voltar à Página Inicial</a>
+>>>>>>> a05fbe918e5043a03f81487a1ba5540682f611d6
+</div>
+
+</body>
+</html>

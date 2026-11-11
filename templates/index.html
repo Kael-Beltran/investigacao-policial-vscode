@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Investigação Policial – Crimes, mistérios e suspense</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<<<<<<< HEAD
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Oswald:wght@500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='capa.css') }}">
+</head>
+<body>
+=======
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Caveat:wght@500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="nav">
+  <a class="logo" href="#">Investigação<span> Policial</span></a>
+  <nav class="menu" aria-label="Principal">
+    <a href="/" aria-current="page">Início</a>
+    <a href="/casos">Casos</a>
+    <a href="/investigadores">Investigadores</a>
+    <a href="/suspeitos">Suspeitos</a>
+    <a href="/adicionar-informacoes">Adicionar novas informações</a>
+
+    <!-- Área de Autenticação Dinâmica (Adicionada sem remover nada) -->
+    {% if session.get('user_email') %}
+      <span style="color: #fff; margin-left: 15px; font-size: 14px;">Olá, {{ session['user_email'] }}</span>
+      <a href="/logout" style="color: #ff4d4d; font-weight: bold;">Sair</a>
+    {% else %}
+      <a href="/login" style="color: #4CAF50; font-weight: bold;">Entrar</a>
+    {% endif %}
+  </nav>
+  <button class="search" aria-label="Buscar">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+  </button>
+</header>
+>>>>>>> a05fbe918e5043a03f81487a1ba5540682f611d6
+
+<!-- ===== NOVA CAPA ===== -->
+<main class="capa">
+  <div class="capa-slab" aria-hidden="true"></div>
+
+<<<<<<< HEAD
+  <div class="capa-icon" aria-hidden="true">
+    <img src="{{ url_for('static', filename='img/lupa.webp') }}" alt="">
+    <span class="capa-tint"></span>
+    <span class="capa-glass"><i class="capa-sweep"></i></span>
+=======
+  <div class="desk"></div>
+  <div class="glow"></div>
+  <div class="bulb"></div>
+  <div class="shade"></div>
+
+  <div class="copy">
+    <h1>Crimes,<br>mistérios e<span class="red">Suspense</span></h1>
+    <p>Cada caso esconde uma história. Explore evidências,
+      descubra pistas e mergulhe no universo das investigações policiais.</p>
+    <a class="cta" href="#"> EXPLORAR INVESTIGAÇÕES
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+>>>>>>> a05fbe918e5043a03f81487a1ba5540682f611d6
+  </div>
+
+  <header class="capa-top">
+    <a class="capa-logo" href="{{ url_for('home') }}"><i></i>Investigação Policial</a>
+    <div class="capa-hot">Suporte<b>(0800) 123 45 67</b></div>
+  </header>
+
+  <section class="capa-mid">
+    <div class="capa-side">
+      <span>Banco de dados</span><br><strong>da investigação</strong>
+      <span class="capa-dash"></span>
+      <span>Casos, suspeitos,<br>evidências e testemunhas</span>
+    </div>
+
+    <div>
+      <h1 class="capa-title">Crimes, mistérios e suspense.</h1>
+      <p class="capa-note">Consulte os casos registrados, conheça os investigadores e acompanhe <b>cada vestígio</b> até virar uma pista.</p>
+      <a class="capa-more" href="{{ url_for('pagina_casos') }}">Ver casos
+        <span><svg width="18" height="12" viewBox="0 0 18 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M0 6h16M11 1l5 5-5 5"/></svg></span>
+      </a>
+    </div>
+
+    <ul class="capa-menu" aria-label="Principal">
+      <li><a href="{{ url_for('home') }}" aria-current="page">Início</a></li>
+      <li><a href="{{ url_for('pagina_casos') }}">Casos</a></li>
+      <li><a href="{{ url_for('pagina_investigadores') }}">Investigadores</a></li>
+      <li><a href="{{ url_for('pagina_suspeitos') }}">Suspeitos</a></li>
+      <li><a href="{{ url_for('pagina_adicionar_informacoes') }}">Adicionar informações</a></li>
+    </ul>
+  </section>
+
+  <footer class="capa-bot">
+    <span></span>
+    <a class="capa-next" href="#sobre">Próximo
+      <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg>
+    </a>
+    <a class="capa-link" href="{{ url_for('pagina_adicionar_informacoes') }}">Novo registro</a>
+  </footer>
+</main>
+
+<!-- ===== SEÇÕES ABAIXO DA CAPA (mantidas) ===== -->
+<section class="sobre" id="sobre">
+  <h2 class="sobre-title">Central de Investigação<br>e Registro de Casos</h2>
+
+  <div class="sobre-grid">
+
+    <article class="sobre-item">
+      <span class="sobre-num">01.</span>
+      <h3>Casos</h3>
+      <p>Consulte todos os casos registrados no sistema, com o tipo de crime, a descrição e o andamento de cada investigação.</p>
+      <a class="sobre-link" href="{{ url_for('pagina_casos') }}">Ver mais</a>
+    </article>
+
+    <article class="sobre-item">
+      <span class="sobre-num">02.</span>
+      <h3>Investigadores</h3>
+      <p>Conheça os investigadores responsáveis por cada caso e acompanhe quem está à frente de cada apuração.</p>
+      <a class="sobre-link" href="{{ url_for('pagina_investigadores') }}">Ver mais</a>
+    </article>
+
+    <article class="sobre-item">
+      <span class="sobre-num">03.</span>
+      <h3>Suspeitos</h3>
+      <p>Veja os suspeitos ligados aos casos, com as informações e evidências reunidas durante a investigação.</p>
+      <a class="sobre-link" href="{{ url_for('pagina_suspeitos') }}">Ver mais</a>
+    </article>
+
+  </div>
+</section>
+
+<section class="diferenciais" id="diferenciais">
+  <div class="diferenciais-inner">
+    <h2 class="diferenciais-title">Por que nos escolher</h2>
+    <p class="diferenciais-support">Suporte: (0800) 123 45 67</p>
+
+    <div class="diferenciais-grid">
+
+      <article class="diferenciais-card">
+        <svg viewBox="0 0 64 64" width="64" height="64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="14" y="6" width="36" height="52" rx="4"/>
+          <circle cx="32" cy="26" r="9"/>
+          <path d="M23 26h18M32 17c-4 4-4 14 0 18M32 17c4 4 4 14 0 18"/>
+          <path d="M22 46h20"/>
+        </svg>
+        <h3>Casos documentados com precisão</h3>
+      </article>
+
+      <article class="diferenciais-card">
+        <svg viewBox="0 0 64 64" width="64" height="64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M8 20V8h12M44 8h12v12M56 44v12H44M20 56H8V44"/>
+          <path d="M20 40c0-8 4-18 12-18s12 10 12 18"/>
+          <path d="M26 44c0-6 2-12 6-12s6 6 6 12"/>
+          <path d="M32 38v10"/>
+        </svg>
+        <h3>Investigadores treinados e certificados</h3>
+      </article>
+
+      <article class="diferenciais-card">
+        <svg viewBox="0 0 64 64" width="64" height="64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="6" y="20" width="52" height="34" rx="4"/>
+          <circle cx="32" cy="37" r="11"/>
+          <circle cx="32" cy="37" r="5"/>
+          <path d="M24 20l3-8h10l3 8"/>
+        </svg>
+        <h3>Evidências registradas e protegidas</h3>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<<<<<<< HEAD
+=======
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+>>>>>>> a05fbe918e5043a03f81487a1ba5540682f611d6
+</body>
+</html>

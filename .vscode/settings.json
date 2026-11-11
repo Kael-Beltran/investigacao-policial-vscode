@@ -1,0 +1,8 @@
+{
+  "python.terminal.activateEnvironment": true,
+  "files.eol": "\n",
+  "editor.tabSize": 4,
+  "[html]": { "editor.tabSize": 2 },
+  "[css]": { "editor.tabSize": 2 },
+  "[javascript]": { "editor.tabSize": 2 }
+}

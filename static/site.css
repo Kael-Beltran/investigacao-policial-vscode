@@ -1,0 +1,284 @@
+/* ==========================================================
+   SITE.CSS — identidade visual da CAPA aplicada a todas as páginas
+   Carregue SEMPRE por último (depois do css específico da página).
+   Fonte: Manrope | Cores: #0c0c0d, #f4f4f2, #8c8c90, #e84545
+========================================================== */
+
+body.site {
+  --c-bg: #0c0c0d;
+  --c-ink: #f4f4f2;
+  --c-muted: #8c8c90;
+  --c-red: #e84545;
+  --c-red2: #b81f26;
+  --c-line: #2a2a2d;
+
+  display: block;
+  place-items: normal;
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin: 0;
+  padding: 32px 48px 48px;
+  color: var(--c-ink);
+  font: 400 15px/1.5 "Manrope", sans-serif;
+  background: radial-gradient(120% 90% at 30% 100%, #17171a 0%, var(--c-bg) 60%);
+  background-attachment: fixed;
+}
+body.site a { color: inherit; text-decoration: none; }
+body.site a:focus-visible { outline: 2px solid var(--c-red); outline-offset: 4px; }
+
+/* ---------- Cabeçalho (igual ao topo da capa + menu) ---------- */
+.site-top {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  max-width: none;
+  margin: 0 auto;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--c-line);
+}
+.site .capa-logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 17px; white-space: nowrap; }
+.site .capa-logo i { width: 10px; height: 10px; background: var(--c-red); display: block; }
+.site .capa-hot { font-size: 13px; color: var(--c-muted); white-space: nowrap; }
+.site .capa-hot b { color: var(--c-ink); font-weight: 700; font-size: 15px; margin-left: 6px; }
+
+/* menu horizontal com a mesma aparência do menu da capa */
+.site .site-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 26px;
+  justify-content: center;
+  border: 0;
+}
+.site .site-menu a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12.5px;
+  color: var(--c-muted);
+}
+.site .site-menu a::after { content: ""; width: 5px; height: 5px; border-radius: 50%; background: #55555a; order: -1; }
+.site .site-menu a:hover,
+.site .site-menu a[aria-current] { color: var(--c-ink); }
+.site .site-menu a:hover::after,
+.site .site-menu a[aria-current]::after { background: var(--c-red); }
+
+/* ---------- Conteúdo ---------- */
+.site .container,
+.site .page-shell {
+  width: 100%;
+  max-width: none;
+  margin: 0 auto;
+  padding: 56px 0 0;
+}
+
+/* Títulos (mesmo padrão do título da capa) */
+.site .container h1,
+.site .form-heading h1 {
+  margin: 0 0 14px;
+  padding: 0;
+  border: 0;
+  max-width: 14em;
+  color: var(--c-ink);
+  font: 500 clamp(34px, 4.6vw, 60px)/1.06 "Manrope", sans-serif;
+  letter-spacing: -.025em;
+  text-transform: none;
+}
+.site .container h1 .red,
+.site .form-heading h1 em { color: var(--c-red); font-style: normal; }
+.site .container h1::after,
+.site .form-heading h1::after {
+  content: "";
+  display: block;
+  width: 16px; height: 2px;
+  margin: 22px 0 30px;
+  background: var(--c-red);
+}
+.site .form-heading h1::after { margin-bottom: 16px; }
+
+/* Texto de apoio (igual ao .capa-note) */
+.site .container > p,
+.site .form-heading p {
+  max-width: 52ch;
+  margin: 0 0 36px;
+  padding-left: 14px;
+  border-left: 2px solid var(--c-red);
+  color: var(--c-muted);
+  font: 400 13.5px/1.6 "Manrope", sans-serif;
+}
+.site .container > p strong { color: var(--c-ink); font-weight: 500; }
+
+/* ---------- Cards das listas e do painel ---------- */
+.site .case-card,
+.site .investigator-card,
+.site .suspect-card,
+.site .option-card {
+  display: block;
+  margin: 0 0 16px;
+  padding: 24px 26px;
+  background: rgba(255, 255, 255, .025);
+  border: 1px solid var(--c-line);
+  border-left: 2px solid var(--c-red);
+  border-radius: 0;
+  box-shadow: none;
+  transition: background .2s, border-color .2s, transform .2s;
+}
+.site .case-card:hover,
+.site .investigator-card:hover,
+.site .suspect-card:hover,
+.site .option-card:hover { background: rgba(232, 69, 69, .06); border-color: #3a3a3e; border-left-color: var(--c-red); transform: none; }
+.site .option-card:hover { transform: translateY(-2px); }
+
+.site .case-card h3,
+.site .investigator-card h3,
+.site .suspect-card h3,
+.site .option-card h3 {
+  margin: 0 0 12px;
+  color: var(--c-ink);
+  font: 500 20px/1.25 "Manrope", sans-serif;
+  letter-spacing: -.01em;
+}
+.site .case-card p,
+.site .investigator-card p,
+.site .suspect-card p,
+.site .option-card p { margin: 6px 0; color: var(--c-muted); font-size: 13.5px; line-height: 1.6; }
+.site .case-card strong,
+.site .investigator-card strong,
+.site .suspect-card strong { color: var(--c-ink); font-weight: 600; }
+
+/* lista em grade nas telas largas; painel em 2 colunas */
+@media (min-width: 1000px) {
+  .site .container:has(.case-card, .investigator-card, .suspect-card) { display: grid; grid-template-columns: repeat(2, 1fr); column-gap: 20px; }
+  .site .container:has(.case-card, .investigator-card, .suspect-card) > h1,
+  .site .container:has(.case-card, .investigator-card, .suspect-card) > p,
+  .site .container:has(.case-card, .investigator-card, .suspect-card) > .back-btn { grid-column: 1 / -1; }
+}
+.site .grid-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px 20px; }
+.site .grid-options .option-card { margin: 0; }
+
+/* ---------- Botão "Voltar" (mesmo estilo do botão da capa) ---------- */
+.site .back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 28px;
+  padding: 0;
+  background: none;
+  border-radius: 0;
+  color: var(--c-ink);
+  font-size: 13px;
+  font-weight: 600;
+}
+.site .back-btn:hover { background: none; }
+.site .back-btn span {
+  width: 52px; height: 52px;
+  display: grid; place-items: center;
+  border: 1px solid #55555a;
+  border-radius: 50%;
+  transition: background .2s, border-color .2s;
+}
+.site .back-btn span svg { transform: scaleX(-1); }
+.site .back-btn:hover span { background: var(--c-red); border-color: var(--c-red); }
+
+/* link "Voltar ao painel / início" dos formulários */
+.site .page-back { max-width: none; margin: 0 auto; padding-top: 40px; }
+.site .back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  border: 0;
+  background: none;
+  border-radius: 0;
+  color: var(--c-muted);
+  font: 600 12.5px "Manrope", sans-serif;
+  transition: color .2s;
+}
+.site .back-link:hover { color: var(--c-ink); background: none; }
+.site .back-link span { margin: 0; color: var(--c-red); }
+
+/* ---------- Formulários ---------- */
+.site .page-shell { padding-top: 24px; }
+.site .form-card {
+  width: min(100%, 760px);
+  margin: 0;
+  padding: clamp(24px, 4vw, 44px);
+  border: 1px solid var(--c-line);
+  border-left: 2px solid var(--c-red);
+  border-radius: 0;
+  background: rgba(255, 255, 255, .025);
+  box-shadow: none;
+}
+.site .section-tag { color: var(--c-red); font: 600 11px "Manrope", sans-serif; letter-spacing: 1.5px; text-transform: uppercase; }
+.site .section-tag i { border-radius: 0; box-shadow: none; width: 8px; height: 8px; }
+.site .section-tag span { color: var(--c-muted); }
+.site .form-heading p { margin-bottom: 8px; }
+
+.site .field label { color: var(--c-ink); font-size: 12.5px; font-weight: 600; }
+.site .field input,
+.site .field select,
+.site .field textarea {
+  border: 1px solid var(--c-line);
+  border-radius: 0;
+  background: #121214;
+  color: var(--c-ink);
+  font: 400 13.5px "Manrope", sans-serif;
+}
+.site .field input:focus,
+.site .field select:focus,
+.site .field textarea:focus { border-color: var(--c-red); background: #161618; box-shadow: none; }
+.site .field-hint,
+.site .form-notice p { color: var(--c-muted); font-family: "Manrope", sans-serif; }
+.site .form-notice { border-radius: 0; border: 1px solid var(--c-line); border-left: 2px solid var(--c-red); background: rgba(232, 69, 69, .05); }
+.site .form-bottom { border-top-color: var(--c-line); }
+
+.site .submit-button {
+  border-radius: 0;
+  background: var(--c-red);
+  color: #fff;
+  font: 600 13px "Manrope", sans-serif;
+  transition: background .2s;
+}
+.site .submit-button:hover { background: var(--c-red2); transform: none; }
+
+/* ---------- Ícones sempre ao lado do texto ---------- */
+.site .nav-item, .site .menu-item, .site .feature-item, .site .icon-text, .site .action-icon, .site .card-icon {
+  display: inline-flex; align-items: center; gap: 10px;
+}
+
+/* ---------- Telas menores ---------- */
+@media (max-width: 1100px) {
+  .site .capa-hot { display: none; }
+}
+@media (max-width: 900px) {
+  body.site { padding: 22px 22px 36px; }
+  .site-top { flex-wrap: wrap; }
+  .site .site-menu { order: 3; flex: 1 0 100%; justify-content: flex-start; }
+  .site .site-menu a::after { display: none; }
+  .site .site-menu a[aria-current] { color: var(--c-red); }
+  .site .grid-options { grid-template-columns: 1fr; }
+  .site .container, .site .page-shell { padding-top: 36px; }
+}
+
+/* campos com atributo hidden (ex.: "Especifique a ocorrência") só aparecem quando o script os libera */
+.site [hidden] { display: none !important; }
+.site .form-heading h1 { margin-top: 16px; }
+
+/* ---------- Avisos (sucesso / erro depois de salvar) ---------- */
+.aviso-site { max-width: 1100px; margin: 20px auto 0; }
+.aviso {
+  margin: 0 0 8px;
+  padding: 12px 16px;
+  border: 1px solid var(--c-line);
+  border-left: 3px solid var(--c-muted);
+  background: rgba(255, 255, 255, .04);
+  font-size: 14px;
+}
+.aviso-ok   { border-left-color: #3fb97a; }
+.aviso-erro { border-left-color: var(--c-red); }
