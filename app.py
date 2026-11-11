@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 import os
 
 from flask import (
@@ -10,13 +10,13 @@ from flask import (
     send_from_directory,
     url_for,
 )
-=======
+
 from email import message
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session, flash
 from flask import Flask, request, jsonify, render_template, redirect, url_for
 from psycopg2.extras import RealDictCursor
 from werkzeug.security import generate_password_hash, check_password_hash
->>>>>>> a05fbe918e5043a03f81487a1ba5540682f611d6
+
 
 #67
 
@@ -33,12 +33,11 @@ load_dotenv()
 
 app = Flask(__name__)
 
-<<<<<<< HEAD
 app.secret_key = os.getenv(
     "SECRET_KEY",
     "troque-esta-chave-em-producao"
 )
-=======
+
 
 app.secret_key = 'uma_chave_super_secreta_e_unica_aqui'
 
@@ -46,7 +45,7 @@ app.secret_key = 'uma_chave_super_secreta_e_unica_aqui'
 def mostrar_ivestigadores():
     conn = criar_conexao()
     cursor = conn.cursor(cursor_factory=RealDictCursor)
->>>>>>> a05fbe918e5043a03f81487a1ba5540682f611d6
+
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
