@@ -5,64 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Investigação Policial – Crimes, mistérios e suspense</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<<<<<<< HEAD
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Oswald:wght@500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='capa.css') }}">
 </head>
 <body>
-=======
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Caveat:wght@500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-<header class="nav">
-  <a class="logo" href="#">Investigação<span> Policial</span></a>
-  <nav class="menu" aria-label="Principal">
-    <a href="/" aria-current="page">Início</a>
-    <a href="/casos">Casos</a>
-    <a href="/investigadores">Investigadores</a>
-    <a href="/suspeitos">Suspeitos</a>
-    <a href="/adicionar-informacoes">Adicionar novas informações</a>
-
-    <!-- Área de Autenticação Dinâmica (Adicionada sem remover nada) -->
-    {% if session.get('user_email') %}
-      <span style="color: #fff; margin-left: 15px; font-size: 14px;">Olá, {{ session['user_email'] }}</span>
-      <a href="/logout" style="color: #ff4d4d; font-weight: bold;">Sair</a>
-    {% else %}
-      <a href="/login" style="color: #4CAF50; font-weight: bold;">Entrar</a>
-    {% endif %}
-  </nav>
-  <button class="search" aria-label="Buscar">
-    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
-  </button>
-</header>
->>>>>>> a05fbe918e5043a03f81487a1ba5540682f611d6
 
 <!-- ===== NOVA CAPA ===== -->
 <main class="capa">
   <div class="capa-slab" aria-hidden="true"></div>
 
-<<<<<<< HEAD
   <div class="capa-icon" aria-hidden="true">
     <img src="{{ url_for('static', filename='img/lupa.webp') }}" alt="">
     <span class="capa-tint"></span>
     <span class="capa-glass"><i class="capa-sweep"></i></span>
-=======
-  <div class="desk"></div>
-  <div class="glow"></div>
-  <div class="bulb"></div>
-  <div class="shade"></div>
-
-  <div class="copy">
-    <h1>Crimes,<br>mistérios e<span class="red">Suspense</span></h1>
-    <p>Cada caso esconde uma história. Explore evidências,
-      descubra pistas e mergulhe no universo das investigações policiais.</p>
-    <a class="cta" href="#"> EXPLORAR INVESTIGAÇÕES
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-    </a>
->>>>>>> a05fbe918e5043a03f81487a1ba5540682f611d6
   </div>
 
   <header class="capa-top">
@@ -174,9 +131,5 @@
   </div>
 </section>
 
-<<<<<<< HEAD
-=======
-<script src="{{ url_for('static', filename='script.js') }}"></script>
->>>>>>> a05fbe918e5043a03f81487a1ba5540682f611d6
 </body>
 </html>

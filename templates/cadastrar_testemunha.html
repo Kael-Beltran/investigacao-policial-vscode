@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<<<<<<< HEAD
 
 <head>
     <meta charset="UTF-8">
@@ -257,85 +256,4 @@
 
 </body>
 
-=======
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#111114">
-  <title>Cadastrar testemunha | Central de Investigações</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Roboto+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static', filename='cadastrar_suspeito.css') }}">
-</head>
-<body>
-  <main class="page-shell">
-    <header class="topbar">
-      <a class="brand" aria-label="Central de Investigações - página inicial">
-        <span class="brand-mark">CI</span>
-        <span>CENTRAL <b>/ INVESTIGAÇÕES</b></span>
-      </a>
-      <a href="{{ url_for('home') }}" class="back-link"> Voltar ao início </a>
-    </header>
-
-    <section class="form-card" aria-labelledby="page-title">
-      <div class="form-heading">
-        <span class="section-tag"><i></i> NOVO REGISTRO <span>/ TESTEMUNHAS</span></span>
-        <h1 id="page-title">Cadastrar <em>testemunha.</em></h1>
-        <p>Adicione o depoimento e os dados de uma testemunha ao banco de registros. Preencha os campos com atenção.</p>
-      </div>
-
-      <form action="{{ url_for('salvar_testemunha') }}" method="POST" novalidate>
-        <div class="form-grid">
-          <div class="field field-full">
-            <label for="nome">Nome completo <span>*</span></label>
-            <input type="text" id="nome" name="nome" placeholder="Digite o nome completo" autocomplete="name" required maxlength="120">
-          </div>
-
-          <div class="field">
-            <label for="telefone">Telefone <span>*</span></label>
-            <input type="text" id="telefone" name="telefone" placeholder="(00) 00000-0000" autocomplete="tel" maxlength="20" required>
-          </div>
-
-          <div class="field">
-            <label for="caso_id">ID do caso relacionado</label>
-            <input type="text" id="caso_id" name="caso_id" placeholder="Ex.: CASO-2026-001" maxlength="40">
-            <small class="field-hint">Campo opcional.</small>
-          </div>
-
-          <div class="field field-full">
-            <label for="endereco">Endereço</label>
-            <input type="text" id="endereco" name="endereco" placeholder="Rua, número, bairro e cidade" autocomplete="street-address" maxlength="180">
-          </div>
-
-          <div class="field field-full">
-            <label for="depoimento">Depoimento <span>*</span></label>
-            <textarea id="depoimento" name="depoimento" placeholder="Relato detalhado fornecido pela testemunha..." rows="4" required style="width: 100%; padding: 12px 15px; outline: none; border: 1px solid rgba(255,255,255,.12); border-radius: 5px; background: #252529; color: var(--text); font: 12px 'Roboto Mono', monospace; resize: vertical;"></textarea>
-          </div>
-        </div>
-
-        <div class="form-notice" role="note">
-          <span class="notice-icon" aria-hidden="true">!</span>
-          <p>Confira as informações antes de concluir. Depoimentos e dados de testemunhas são sigilosos.</p>
-        </div>
-
-        <button class="submit-button" type="submit">
-          <span>Cadastrar testemunha</span>
-          <span class="button-arrow" aria-hidden="true">→</span>
-        </button>
-      </form>
-
-      <footer class="form-bottom">
-        <a href="{{ url_for('home') }}" class="return-link"> Voltar para a página inicial </a>
-        <span class="required-note"><b>*</b> Campos obrigatórios</span>
-      </footer>
-    </section>
-
-    <footer class="page-caption">
-      <span></span>
-      <span>AMBIENTE DE DADOS <b>●</b></span>
-    </footer>
-  </main>
-</body>
->>>>>>> a05fbe918e5043a03f81487a1ba5540682f611d6
 </html>
