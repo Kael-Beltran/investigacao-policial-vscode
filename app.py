@@ -17,9 +17,6 @@ from flask import Flask, request, jsonify, render_template, redirect, url_for
 from psycopg2.extras import RealDictCursor
 from werkzeug.security import generate_password_hash, check_password_hash
 
-
-#67
-
 from dotenv import load_dotenv
 
 try:
@@ -242,38 +239,6 @@ def cadastrar_testemunhas():
 @app.route('/nova-testemunha', methods=['GET'])
 def pagina_cadastrar_testemunha():
     return render_template('cadastrar_testemunha.html')
-
-@app.route('/cadastrar-testemunha', methods=['POST'])
-def salvar_testemunha():
-    nome = request.form['nome']
-    telefone = request.form['telefone']
-    endereco = request.form['endereco']
-    depoimento = request.form['depoimento']
-    caso_id = request.form['caso_id']
-
-    conn = criar_conexao()
-    cursor = conn.cursor()
-
-    try:
-        cursor.execute(
-            '''
-            INSERT INTO testemunhas (nome, telefone, endereco, depoimento, caso_id) 
-            VALUES (%s, %s, %s, %s, %s)
-            ''',
-            (nome, telefone, endereco, depoimento, caso_id)
-        )
-        conn.commit()
-    except Exception as e:
-        conn.rollback()
-        print(f"Erro ao cadastrar testemunha: {e}")
-    finally:
-        cursor.close()
-        conn.close()
-
-    return redirect(url_for('home'))
-
-
-
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
