@@ -1,40 +1,18 @@
 import os
-from urllib.parse import urlparse
-import pg8000.native
+import psycopg2
+import psycopg2.extras
 from create_pdf import criar_pdf
+from flask import Flask, flash, redirect, render_template, request, send_file, send_from_directory, url_for
 
-from flask import (
-    Flask,
-    flash,
-    redirect,
-    render_template,
-    request,
-    send_file,
-    send_from_directory,
-    url_for,
-)
-
-# Tenta carregar o dotenv para desenvolvimento local
 try:
     from dotenv import load_dotenv
     load_dotenv()
 except ImportError:
     pass
 
-
 app = Flask(__name__)
-
-app.secret_key = os.getenv(
-    "SECRET_KEY",
-    "troque-esta-chave-em-producao"
-)
-
+app.secret_key = os.getenv("SECRET_KEY", "troque-esta-chave-em-producao")
 DATABASE_URL = os.getenv("DATABASE_URL")
-
-AVISO_SEM_DATABASE = (
-    "DATABASE_URL não foi encontrada. "
-    "Verifique o arquivo .env na raiz do projeto ou no painel da Vercel."
-)
 
 
 def resumo(erro):
@@ -44,86 +22,48 @@ def resumo(erro):
 
 def conectar():
     if not DATABASE_URL:
-        flash(AVISO_SEM_DATABASE, "erro")
-        print("ERRO: DATABASE_URL não foi encontrada.")
+        flash("DATABASE_URL não foi encontrada.", "erro")
         return None
-
     try:
-        url = urlparse(DATABASE_URL)
-        conexao = pg8000.native.Connection(
-            user=url.username,
-            password=url.password,
-            host=url.hostname,
-            port=url.port or 5432,
-            database=url.path.lstrip("/"),
-            ssl_context=True
-        )
-        return conexao
+        return psycopg2.connect(DATABASE_URL, connect_timeout=10)
     except Exception as erro:
-        print("ERRO DE CONEXÃO COM O NEON:", erro)
-        flash(
-            f"Erro ao conectar ao banco de dados: {resumo(erro)}",
-            "erro"
-        )
+        print("Erro ao conectar ao banco:", erro)
+        flash(f"Erro ao conectar ao banco de dados: {resumo(erro)}", "erro")
         return None
 
 
 def consultar(sql, params=()):
-    con = None
+    con = conectar()
+    if not con:
+        return []
     try:
-        con = conectar()
-        if con is None:
-            return []
-
-        # Substitui a sintaxe de placeholder do psycopg2 (%s) para pg8000 (:1, :2, etc)
-        sql_formatado = sql
-        for i in range(len(params), 0, -1):
-            sql_formatado = sql_formatado.replace("%s", f":{i}", 1)
-
-        resultado_bruto = con.run(sql_formatado, *params)
-        
-        # Converte as colunas para um dicionário (estilo RealDictCursor)
-        colunas = [col["name"] for col in con.columns]
-        resultado = [dict(zip(colunas, linha)) for linha in resultado_bruto]
-
-        return resultado
-
+        with con.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+            cur.execute(sql, params)
+            return cur.fetchall()
     except Exception as erro:
-        print("❌ ERRO NA CONSULTA:", repr(erro))
-        flash(
-            f"Erro ao consultar o banco de dados: {resumo(erro)}",
-            "erro"
-        )
+        print("ERRO NA CONSULTA:", erro)
+        flash(f"Erro ao consultar o banco de dados: {resumo(erro)}", "erro")
         return []
     finally:
-        if con:
-            con.close()
+        con.close()
 
 
 def executar(sql, params=()):
-    con = None
+    con = conectar()
+    if not con:
+        return False
     try:
-        con = conectar()
-        if con is None:
-            return False
-
-        sql_formatado = sql
-        for i in range(len(params), 0, -1):
-            sql_formatado = sql_formatado.replace("%s", f":{i}", 1)
-
-        con.run(sql_formatado, *params)
+        with con.cursor() as cur:
+            cur.execute(sql, params)
+        con.commit()
         return True
-
     except Exception as erro:
-        print("Erro no banco (gravação):", erro)
-        flash(
-            f"Erro ao gravar no banco de dados: {resumo(erro)}",
-            "erro"
-        )
+        con.rollback()
+        print("Erro no banco:", erro)
+        flash(f"Erro ao gravar no banco de dados: {resumo(erro)}", "erro")
         return False
     finally:
-        if con:
-            con.close()
+        con.close()
 
 
 def campo(nome):
@@ -131,9 +71,9 @@ def campo(nome):
     return valor or None
 
 
-def avisar(ok, texto_ok):
+def avisar(ok, texto):
     if ok:
-        flash(texto_ok, "ok")
+        flash(texto, "ok")
 
 
 @app.route("/")
@@ -143,20 +83,17 @@ def home():
 
 @app.route("/casos")
 def pagina_casos():
-    casos = consultar("SELECT * FROM casos ORDER BY id")
-    return render_template("mostrar_casos.html", casos=casos)
+    return render_template("mostrar_casos.html", casos=consultar("SELECT * FROM casos ORDER BY id"))
 
 
 @app.route("/investigadores")
 def pagina_investigadores():
-    investigadores = consultar("SELECT * FROM investigadores ORDER BY id")
-    return render_template("mostrar_investigadores.html", investigadores=investigadores)
+    return render_template("mostrar_investigadores.html", investigadores=consultar("SELECT * FROM investigadores ORDER BY id"))
 
 
 @app.route("/suspeitos")
 def pagina_suspeitos():
-    suspeitos = consultar("SELECT * FROM suspeitos ORDER BY id")
-    return render_template("mostrar_suspeitos.html", suspeitos=suspeitos)
+    return render_template("mostrar_suspeitos.html", suspeitos=consultar("SELECT * FROM suspeitos ORDER BY id"))
 
 
 @app.route("/adicionar-informacoes")
@@ -188,7 +125,7 @@ def pagina_nova_testemunha():
 def salvar_caso():
     ok = executar(
         "INSERT INTO casos (titulo, tipo_crime, descricao) VALUES (%s, %s, %s)",
-        (campo("titulo"), campo("tipo"), campo("descricao")),
+        (campo("titulo"), campo("tipo"), campo("descricao"))
     )
     avisar(ok, "Caso registrado com sucesso.")
     return redirect(url_for("pagina_casos"))
@@ -198,7 +135,7 @@ def salvar_caso():
 def salvar_suspeito():
     ok = executar(
         "INSERT INTO suspeitos (nome, cpf, data_nascimento, endereco, caso_id) VALUES (%s, %s, %s, %s, %s)",
-        (campo("nome"), campo("cpf"), campo("nascimento"), campo("endereco"), campo("caso_id")),
+        (campo("nome"), campo("cpf"), campo("nascimento"), campo("endereco"), campo("caso_id"))
     )
     avisar(ok, "Suspeito cadastrado com sucesso.")
     return redirect(url_for("pagina_suspeitos"))
@@ -208,7 +145,7 @@ def salvar_suspeito():
 def salvar_evidencia():
     ok = executar(
         "INSERT INTO evidencias (descricao, tipo, local_encontrada, data_coleta, caso_id) VALUES (%s, %s, %s, %s, %s)",
-        (campo("descricao"), campo("tipo"), campo("local_encontrada"), campo("data_coleta"), campo("caso_id")),
+        (campo("descricao"), campo("tipo"), campo("local_encontrada"), campo("data_coleta"), campo("caso_id"))
     )
     avisar(ok, "Evidência adicionada com sucesso.")
     return redirect(url_for("pagina_adicionar_informacoes"))
@@ -218,28 +155,18 @@ def salvar_evidencia():
 def salvar_testemunha():
     ok = executar(
         "INSERT INTO testemunhas (nome, telefone, endereco, depoimento, caso_id) VALUES (%s, %s, %s, %s, %s)",
-        (campo("nome"), campo("telefone"), campo("endereco"), campo("depoimento"), campo("caso_id")),
+        (campo("nome"), campo("telefone"), campo("endereco"), campo("depoimento"), campo("caso_id"))
     )
     avisar(ok, "Testemunha cadastrada com sucesso.")
     return redirect(url_for("pagina_adicionar_informacoes"))
 
-@app.route('/exportar-pdf-suspeitos')
-def exportar_pdf_suspeitos():
-    dados_brutos = consultar("SELECT nome, cpf, endereco FROM suspeitos ORDER BY id")
-    
-    lista_suspeitos = []
-    for suspeito in dados_brutos:
-        nome_formatado = f"{suspeito['nome']} (CPF: {suspeito['cpf']})"
-        lista_suspeitos.append(nome_formatado)
-    
-    arquivo_pdf = criar_pdf(lista_suspeitos)
 
-    return send_file(
-        arquivo_pdf,
-        mimetype='application/pdf',
-        as_attachment=True,
-        download_name="relatorio_suspeitos.pdf"
-    )
+@app.route("/exportar-pdf-suspeitos")
+def exportar_pdf_suspeitos():
+    dados = consultar("SELECT nome, cpf FROM suspeitos ORDER BY id")
+    lista = [f"{x['nome'] or 'Não informado'} (CPF: {x['cpf'] or 'Não informado'})" for x in dados]
+    return send_file(criar_pdf(lista), mimetype="application/pdf", as_attachment=True, download_name="relatorio_suspeitos.pdf")
+
 
 @app.route("/js/<path:nome>")
 def arquivos_js(nome):
