@@ -99,3 +99,61 @@ label {
   display: inline-block;
   vertical-align: middle;
 }
+
+/* Container responsivo da tabela */
+.table-container {
+    overflow-x: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* Estilização da tabela de suspeitos */
+.suspects-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    background-color: #fff;
+    font-size: 14px;
+}
+
+.suspects-table th {
+    padding: 12px;
+    border: 1px solid #ddd;
+    background-color: #f2f2f2;
+    border-bottom: 2px solid #ddd;
+    color: #333;
+}
+
+.suspects-table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    color: #555;
+}
+
+.suspects-table tr {
+    border-bottom: 1px solid #ddd;
+}
+
+.suspects-table tr:hover {
+    background-color: #f9f9f9;
+}
+
+/* Botão Flutuante de Exportar PDF */
+.btn-export-pdf {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #d9534f;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    transition: background-color 0.2s ease;
+}
+
+.btn-export-pdf:hover {
+    background-color: #c9302c;
+}
