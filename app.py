@@ -9,6 +9,7 @@ from flask import (
     redirect,
     render_template,
     request,
+    send_file,
     send_from_directory,
     url_for,
 )
@@ -222,19 +223,15 @@ def salvar_testemunha():
     avisar(ok, "Testemunha cadastrada com sucesso.")
     return redirect(url_for("pagina_adicionar_informacoes"))
 
-    @app.route('/exportar-pdf-suspeitos')
+@app.route('/exportar-pdf-suspeitos')
 def exportar_pdf_suspeitos():
-   
     dados_brutos = consultar("SELECT nome, cpf, endereco FROM suspeitos ORDER BY id")
     
-    #  Usa um loop for para guardar os dados organizados em uma lista
     lista_suspeitos = []
     for suspeito in dados_brutos:
-        # Cada 'suspeito' é um dicionário, então extraímos o que precisamos
         nome_formatado = f"{suspeito['nome']} (CPF: {suspeito['cpf']})"
         lista_suspeitos.append(nome_formatado)
     
-    #  Passa a lista pronta para a função que gera o PDF
     arquivo_pdf = criar_pdf(lista_suspeitos)
 
     return send_file(
@@ -243,7 +240,6 @@ def exportar_pdf_suspeitos():
         as_attachment=True,
         download_name="relatorio_suspeitos.pdf"
     )
-
 
 @app.route("/js/<path:nome>")
 def arquivos_js(nome):
