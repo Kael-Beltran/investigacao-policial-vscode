@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ caso.titulo }}</title>
+</head>
+<body>
+
+    <h1>{{ caso.titulo }}</h1>
+
+    <p><strong>Tipo de crime:</strong> {{ caso.tipo_crime }}</p>
+    <p><strong>Descrição:</strong> {{ caso.descricao }}</p>
+
+    <h2>Suspeitos</h2>
+    {% for suspeito in suspeitos %}
+        <p>{{ suspeito.nome }}</p>
+    {% else %}
+        <p>Nenhum suspeito cadastrado.</p>
+    {% endfor %}
+
+    <h2>Evidências</h2>
+    {% for evidencia in evidencias %}
+        <p>{{ evidencia.descricao }}</p>
+    {% else %}
+        <p>Nenhuma evidência cadastrada.</p>
+    {% endfor %}
+
+    <h2>Testemunhas</h2>
+    {% for testemunha in testemunhas %}
+        <p>{{ testemunha.nome }}</p>
+    {% else %}
+        <p>Nenhuma testemunha cadastrada.</p>
+    {% endfor %}
+
+</body>
+</html>

@@ -147,6 +147,19 @@ a{color:inherit;text-decoration:none}
   flex:0 0 auto;display:inline-block;vertical-align:middle
 }
 
+.case-card{
+    display:block;
+    color:inherit;
+    text-decoration:none;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.case-card:hover{
+    border-color:var(--red);
+    transform:translateY(-2px);
+}
+
 @media(max-width:600px){
   body{padding:22px 14px;align-items:start}
   .topbar{margin-bottom:17px}

@@ -1,11 +1,5 @@
-from pathlib import Path
 from fpdf import FPDF
 from io import BytesIO
-
-# Configuração do caminho das fontes do Windows
-FONT_DIR = Path("C:/Windows/Fonts")
-FONT_NORMAL = FONT_DIR / "arial.ttf"
-FONT_BOLD = FONT_DIR / "arialbd.ttf"
 
 def criar_pdf(nomes):
     pdf = FPDF(
@@ -15,14 +9,8 @@ def criar_pdf(nomes):
     )
     pdf.add_page()
 
-    if not FONT_NORMAL.exists() or not FONT_BOLD.exists():
-        raise FileNotFoundError("Não foi possível encontrar as fontes Arial no sistema.")
-
-    pdf.add_font(family="Arial", style="", fname=str(FONT_NORMAL))
-    pdf.add_font(family="Arial", style="B", fname=str(FONT_BOLD))
-
     # Título do Relatório
-    pdf.set_font(family="Arial", style="B", size=18)
+    pdf.set_font(family="Helvetica", style="B", size=18)
     pdf.cell(
         w=0,
         h=15,
@@ -35,7 +23,7 @@ def criar_pdf(nomes):
     pdf.ln(5)
 
     # Quantidade de Registros
-    pdf.set_font(family="Arial", size=12)
+    pdf.set_font(family="Helvetica", size=12)
     pdf.cell(
         w=0,
         h=10,
@@ -47,7 +35,7 @@ def criar_pdf(nomes):
     pdf.ln(5)
 
     # Cabeçalho da Tabela
-    pdf.set_font(family="Arial", style="B", size=12)
+    pdf.set_font(family="Helvetica", style="B", size=12)
     pdf.set_fill_color(220, 230, 241)
     
     # Coluna ID
@@ -56,7 +44,7 @@ def criar_pdf(nomes):
     pdf.cell(w=0, h=10, text="Nome", border=1, align="C", fill=True, new_x="LMARGIN", new_y="NEXT")
 
     # Linhas da Tabela (Itens)
-    pdf.set_font("Arial", size=11)
+    pdf.set_font("Helvetica", size=11)
     for indice, nome in enumerate(nomes, start=1):
         pdf.cell(w=20, h=9, text=str(indice), border=1, align="C")
         pdf.cell(w=0, h=9, text=nome, border=1, new_x="LMARGIN", new_y="NEXT")

@@ -20,11 +20,11 @@
 
     {% if casos %}
         {% for caso in casos %}
-        <div class="case-card">
-            <h3>Caso #{{ caso.id }} - {{ caso.titulo }}</h3>
+        <a href="{{ url_for('detalhes_caso', caso_id=caso.id) }}" class="case-card">
+            <h2>Caso #{{ caso.id }} - {{ caso.titulo }}</h2>
             <p><strong>Tipo de Crime:</strong> {{ caso.tipo_crime }}</p>
             <p><strong>Descrição:</strong> {{ caso.descricao }}</p>
-        </div>
+        </a>
         {% endfor %}
     {% else %}
         <p>Nenhum caso registrado no sistema no momento.</p>

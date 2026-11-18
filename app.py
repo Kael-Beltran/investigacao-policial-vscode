@@ -83,17 +83,51 @@ def home():
 
 @app.route("/casos")
 def pagina_casos():
-    return render_template("mostrar_casos.html", casos=consultar("SELECT * FROM casos ORDER BY id"))
+    return render_template(
+        "mostrar_casos.html",
+        casos=consultar("SELECT * FROM casos ORDER BY id")
+    )
+
+
+@app.route("/caso/<int:caso_id>")
+def detalhes_caso(caso_id):
+    caso = consultar("SELECT * FROM casos WHERE id = %s", (caso_id,))
+
+    if not caso:
+        return "Caso não encontrado", 404
+
+    return render_template(
+        "detalhes_caso.html",
+        caso=caso[0],
+        suspeitos=consultar(
+            "SELECT * FROM suspeitos WHERE caso_id = %s",
+            (caso_id,)
+        ),
+        evidencias=consultar(
+            "SELECT * FROM evidencias WHERE caso_id = %s",
+            (caso_id,)
+        ),
+        testemunhas=consultar(
+            "SELECT * FROM testemunhas WHERE caso_id = %s",
+            (caso_id,)
+        )
+    )
 
 
 @app.route("/investigadores")
 def pagina_investigadores():
-    return render_template("mostrar_investigadores.html", investigadores=consultar("SELECT * FROM investigadores ORDER BY id"))
+    return render_template(
+        "mostrar_investigadores.html",
+        investigadores=consultar("SELECT * FROM investigadores ORDER BY id")
+    )
 
 
 @app.route("/suspeitos")
 def pagina_suspeitos():
-    return render_template("mostrar_suspeitos.html", suspeitos=consultar("SELECT * FROM suspeitos ORDER BY id"))
+    return render_template(
+        "mostrar_suspeitos.html",
+        suspeitos=consultar("SELECT * FROM suspeitos ORDER BY id")
+    )
 
 
 @app.route("/adicionar-informacoes")
@@ -135,7 +169,13 @@ def salvar_caso():
 def salvar_suspeito():
     ok = executar(
         "INSERT INTO suspeitos (nome, cpf, data_nascimento, endereco, caso_id) VALUES (%s, %s, %s, %s, %s)",
-        (campo("nome"), campo("cpf"), campo("nascimento"), campo("endereco"), campo("caso_id"))
+        (
+            campo("nome"),
+            campo("cpf"),
+            campo("nascimento"),
+            campo("endereco"),
+            campo("caso_id")
+        )
     )
     avisar(ok, "Suspeito cadastrado com sucesso.")
     return redirect(url_for("pagina_suspeitos"))
@@ -145,7 +185,13 @@ def salvar_suspeito():
 def salvar_evidencia():
     ok = executar(
         "INSERT INTO evidencias (descricao, tipo, local_encontrada, data_coleta, caso_id) VALUES (%s, %s, %s, %s, %s)",
-        (campo("descricao"), campo("tipo"), campo("local_encontrada"), campo("data_coleta"), campo("caso_id"))
+        (
+            campo("descricao"),
+            campo("tipo"),
+            campo("local_encontrada"),
+            campo("data_coleta"),
+            campo("caso_id")
+        )
     )
     avisar(ok, "Evidência adicionada com sucesso.")
     return redirect(url_for("pagina_adicionar_informacoes"))
@@ -155,7 +201,13 @@ def salvar_evidencia():
 def salvar_testemunha():
     ok = executar(
         "INSERT INTO testemunhas (nome, telefone, endereco, depoimento, caso_id) VALUES (%s, %s, %s, %s, %s)",
-        (campo("nome"), campo("telefone"), campo("endereco"), campo("depoimento"), campo("caso_id"))
+        (
+            campo("nome"),
+            campo("telefone"),
+            campo("endereco"),
+            campo("depoimento"),
+            campo("caso_id")
+        )
     )
     avisar(ok, "Testemunha cadastrada com sucesso.")
     return redirect(url_for("pagina_adicionar_informacoes"))
@@ -164,13 +216,25 @@ def salvar_testemunha():
 @app.route("/exportar-pdf-suspeitos")
 def exportar_pdf_suspeitos():
     dados = consultar("SELECT nome, cpf FROM suspeitos ORDER BY id")
-    lista = [f"{x['nome'] or 'Não informado'} (CPF: {x['cpf'] or 'Não informado'})" for x in dados]
-    return send_file(criar_pdf(lista), mimetype="application/pdf", as_attachment=True, download_name="relatorio_suspeitos.pdf")
+    lista = [
+        f"{x['nome'] or 'Não informado'} (CPF: {x['cpf'] or 'Não informado'})"
+        for x in dados
+    ]
+
+    return send_file(
+        criar_pdf(lista),
+        mimetype="application/pdf",
+        as_attachment=True,
+        download_name="relatorio_suspeitos.pdf"
+    )
 
 
 @app.route("/js/<path:nome>")
 def arquivos_js(nome):
-    return send_from_directory(os.path.join(app.root_path, "js"), nome)
+    return send_from_directory(
+        os.path.join(app.root_path, "js"),
+        nome
+    )
 
 
 if __name__ == "__main__":

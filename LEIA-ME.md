@@ -28,9 +28,21 @@ Abra http://127.0.0.1:5000
 Sem depurador, também funciona pelo terminal:
     python app.py
 
-## 4. Banco de dados (PostgreSQL)
-Edite o bloco `DB` no topo do `app.py` (host, dbname, user, password).
-Sem conexão o site abre, mas as listas aparecem vazias.
+## 4. Banco de dados (Neon/PostgreSQL)
+O app usa a variável de ambiente `DATABASE_URL`. No Neon, copie a connection string
+(de preferência a pooled connection string) e configure-a como `DATABASE_URL`.
+O Neon fornece uma conexão TLS; mantenha `sslmode=require` na URL.
+
+Antes do primeiro uso, execute o conteúdo de `schema.sql` no SQL Editor do Neon.
+Configure também `SECRET_KEY` como variável de ambiente, usando um valor aleatório
+forte; não publique essas variáveis no Git.
+
+## 5. Deploy no Vercel
+Importe o repositório no Vercel e configure `DATABASE_URL` e `SECRET_KEY` nas
+Environment Variables do projeto para os ambientes desejados (Production,
+Preview e/ou Development). Faça um novo deploy após salvar as variáveis.
+
+O arquivo `.env` é apenas para desenvolvimento local e não deve ser enviado ao Git.
 
 ## Estrutura
     app.py            rotas do Flask
