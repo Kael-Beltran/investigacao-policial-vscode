@@ -311,9 +311,9 @@
     gap: 25px;
   }
 
-  .capa-mid > div:not(.capa-side) {
-    margin-left: 0;
-  }
+.capa-mid > div:not(.capa-side) {
+  margin-left: -45px;
+}
 
   .capa-title {
     font-size: clamp(42px, 8vw, 60px);
