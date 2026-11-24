@@ -449,3 +449,197 @@ label {
   display: inline-block;
   vertical-align: middle;
 }
+
+
+.sobre {
+  position: relative;
+  padding: 110px 8%;
+  background: #0c0c0d;
+  color: #f4f4f2;
+  font-family: "Manrope", sans-serif;
+  border-top: 1px solid #2a2a2d;
+}
+
+.sobre-title {
+  max-width: 750px;
+  margin: 0 0 65px;
+  font-size: clamp(32px, 4.5vw, 58px);
+  line-height: 1.15;
+  font-weight: 500;
+  letter-spacing: -1.8px;
+  color: #f4f4f2;
+}
+
+.sobre-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.sobre-item {
+  padding: 35px 30px;
+  min-height: 290px;
+  background: #141416;
+  border: 1px solid #29292d;
+  border-radius: 5px;
+  transition: .3s ease;
+}
+
+.sobre-item:hover {
+  transform: translateY(-7px);
+  border-color: #e84545;
+  background: #19191c;
+}
+
+.sobre-num {
+  display: block;
+  margin-bottom: 35px;
+  color: #e84545;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 14px;
+}
+
+.sobre-item h3 {
+  margin: 0 0 18px;
+  color: #f4f4f2;
+  font-size: 25px;
+  font-weight: 600;
+}
+
+.sobre-item p {
+  margin: 0 0 25px;
+  color: #99999e;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.sobre-link {
+  display: inline-block;
+  color: #e84545;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: .2s;
+}
+
+.sobre-link:hover {
+  color: #ff7777;
+  transform: translateX(5px);
+}
+
+.diferenciais {
+  padding: 100px 8%;
+  background: #111113;
+  color: #f4f4f2;
+  font-family: "Manrope", sans-serif;
+  border-top: 1px solid #29292d;
+}
+
+.diferenciais-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.diferenciais-title {
+  margin: 0 0 15px;
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 500;
+  letter-spacing: -1.5px;
+}
+
+.diferenciais-support {
+  margin: 0 0 55px;
+  color: #99999e;
+  font-size: 15px;
+}
+
+.diferenciais-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.diferenciais-card {
+  min-height: 230px;
+  padding: 35px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 35px;
+  background: #19191c;
+  border: 1px solid #2a2a2d;
+  border-radius: 5px;
+  transition: .3s ease;
+}
+
+.diferenciais-card:hover {
+  transform: translateY(-6px);
+  border-color: #e84545;
+}
+
+.diferenciais-card svg {
+  width: 52px;
+  height: 52px;
+  color: #e84545;
+  stroke: currentColor;
+}
+
+.diferenciais-card h3 {
+  margin: 0;
+  max-width: 280px;
+  color: #f4f4f2;
+  font-size: 19px;
+  line-height: 1.5;
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .sobre,
+  .diferenciais {
+    padding: 75px 5%;
+  }
+
+  .sobre-grid,
+  .diferenciais-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sobre-title {
+    margin-bottom: 40px;
+  }
+}
+
+@media (max-width: 600px) {
+  .sobre,
+  .diferenciais {
+    padding: 60px 22px;
+  }
+
+  .sobre-grid,
+  .diferenciais-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .sobre-item {
+    min-height: auto;
+    padding: 28px 24px;
+  }
+
+  .sobre-num {
+    margin-bottom: 22px;
+  }
+
+  .sobre-item h3 {
+    font-size: 22px;
+  }
+
+  .diferenciais-card {
+    min-height: 190px;
+    padding: 28px 24px;
+  }
+
+  .diferenciais-title {
+    font-size: 34px;
+  }
+}
