@@ -1,4 +1,7 @@
 import os
+import re
+from datetime import date
+import calendar
 import psycopg2
 import psycopg2.extras
 from create_pdf import criar_pdf
@@ -31,6 +34,68 @@ def conectar():
         flash(f"Erro ao conectar ao banco de dados: {resumo(erro)}", "erro")
         return None
 
+def validar_cpf(cpf):
+    cpf = re.sub(r"\D", "", cpf or "")
+
+    if len(cpf) != 11:
+        return False
+
+    if cpf == cpf[0] * 11:
+        return False
+
+    # Calcula o primeiro dígito verificador
+    soma = sum(
+        int(cpf[i]) * (10 - i)
+        for i in range(9)
+    )
+
+    resto = (soma * 10) % 11
+    digito1 = 0 if resto == 10 else resto
+
+    if digito1 != int(cpf[9]):
+        return False
+
+    # Calcula o segundo dígito verificador
+    soma = sum(
+        int(cpf[i]) * (11 - i)
+        for i in range(10)
+    )
+
+    resto = (soma * 10) % 11
+    digito2 = 0 if resto == 10 else resto
+
+    if digito2 != int(cpf[10]):
+        return False
+
+    return True
+
+
+def validar_data_nascimento(data_texto):
+    try:
+        nascimento = date.fromisoformat(data_texto)
+    except (ValueError, TypeError):
+        return False
+
+    hoje = date.today()
+
+    # Impede datas futuras
+    if nascimento > hoje:
+        return False
+
+    # Limite de 120 anos
+    ano_limite = hoje.year - 120
+    mes_limite = hoje.month
+    dia_limite = min(
+        hoje.day,
+        calendar.monthrange(ano_limite, hoje.month)[1]
+    )
+
+    data_limite = date(ano_limite, mes_limite, dia_limite)
+
+    if nascimento < data_limite:
+        return False
+
+    return True
 
 def consultar(sql, params=()):
     con = conectar()
@@ -52,16 +117,32 @@ def executar(sql, params=()):
     con = conectar()
     if not con:
         return False
+
     try:
         with con.cursor() as cur:
             cur.execute(sql, params)
+
         con.commit()
         return True
+
+    except psycopg2.errors.ForeignKeyViolation:
+        con.rollback()
+        print("Erro: chave estrangeira inválida.")
+        flash(
+            "Não foi possível cadastrar! O caso informado não existe. Verifique o ID.",
+            "erro"
+        )
+        return False
+
     except Exception as erro:
         con.rollback()
         print("Erro no banco:", erro)
-        flash(f"Erro ao gravar no banco de dados: {resumo(erro)}", "erro")
+        flash(
+            f"Erro ao gravar no banco de dados: {resumo(erro)}",
+            "erro"
+        )
         return False
+
     finally:
         con.close()
 
@@ -167,18 +248,48 @@ def salvar_caso():
 
 @app.route("/salvar-suspeito", methods=["POST"])
 def salvar_suspeito():
+
+    nome = campo("nome")
+    cpf = campo("cpf")
+    nascimento = campo("nascimento")
+    endereco = campo("endereco")
+    caso_id = campo("caso_id")
+
+    # Verifica o CPF
+    if not validar_cpf(cpf):
+        flash("CPF inválido! Digite um CPF com dígitos verificadores válidos.", "erro")
+        return redirect(url_for("pagina_novo_suspeito"))
+
+    # Verifica a data de nascimento
+    if not validar_data_nascimento(nascimento):
+        flash(
+            "Data de nascimento inválida! Informe uma data entre hoje e 120 anos atrás.",
+            "erro"
+        )
+        return redirect(url_for("pagina_novo_suspeito"))
+
+    # Realiza o cadastro
     ok = executar(
-        "INSERT INTO suspeitos (nome, cpf, data_nascimento, endereco, caso_id) VALUES (%s, %s, %s, %s, %s)",
+        """
+        INSERT INTO suspeitos
+        (nome, cpf, data_nascimento, endereco, caso_id)
+        VALUES (%s, %s, %s, %s, %s)
+        """,
         (
-            campo("nome"),
-            campo("cpf"),
-            campo("nascimento"),
-            campo("endereco"),
-            campo("caso_id")
+            nome,
+            re.sub(r"\D", "", cpf),
+            nascimento,
+            endereco,
+            caso_id
         )
     )
+
     avisar(ok, "Suspeito cadastrado com sucesso.")
-    return redirect(url_for("pagina_suspeitos"))
+
+    if ok:
+        return redirect(url_for("pagina_suspeitos"))
+
+    return redirect(url_for("pagina_novo_suspeito"))
 
 
 @app.route("/salvar-evidencia", methods=["POST"])

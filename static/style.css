@@ -231,6 +231,47 @@ a{
   letter-spacing:.5px;
 }
 
+.mensagens-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    width: min(400px, calc(100% - 40px));
+}
+
+.mensagem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 18px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 5px 20px rgba(0,0,0,.4);
+}
+
+.mensagem-erro {
+    background: #351416;
+    color: #ffb4b4;
+    border-left: 4px solid #e84545;
+}
+
+.mensagem-ok {
+    background: #142d20;
+    color: #a8f0c4;
+    border-left: 4px solid #35bd72;
+}
+
+.mensagem button {
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 24px;
+    cursor: pointer;
+}
+
 @media(max-width:900px){
   .menu{display:none}
   .sobre-grid,
