@@ -1,36 +1,227 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>{{ caso.titulo }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ caso.titulo }} | Investigação Policial</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 55px 5%;
+            min-height: 100vh;
+            background: #0c0c0d;
+            color: #f4f4f2;
+            font-family: "Manrope", sans-serif;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .voltar {
+            display: inline-block;
+            margin-bottom: 35px;
+            color: #8c8c90;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color .2s;
+        }
+
+        .voltar:hover {
+            color: #e84545;
+        }
+
+        .titulo {
+            margin: 0 0 15px;
+            font-size: clamp(35px, 5vw, 65px);
+            font-weight: 500;
+            letter-spacing: -2px;
+        }
+
+        .titulo span {
+            color: #e84545;
+        }
+
+        .linha {
+            width: 35px;
+            height: 3px;
+            margin-bottom: 45px;
+            background: #e84545;
+        }
+
+        .informacoes {
+            padding: 30px;
+            margin-bottom: 35px;
+            background: #141416;
+            border: 1px solid #2a2a2d;
+            border-left: 3px solid #e84545;
+        }
+
+        .informacoes p {
+            margin: 12px 0;
+            color: #a5a5aa;
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        .informacoes strong {
+            color: #f4f4f2;
+        }
+
+        .secao-titulo {
+            margin: 40px 0 20px;
+            font-size: 25px;
+            font-weight: 600;
+        }
+
+        .secao-titulo span {
+            color: #e84545;
+        }
+
+        .lista {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 15px;
+        }
+
+        .item {
+            padding: 22px;
+            background: #141416;
+            border: 1px solid #2a2a2d;
+            border-left: 2px solid #e84545;
+            color: #c5c5c8;
+            font-size: 14px;
+            line-height: 1.7;
+            transition: background .2s, transform .2s;
+        }
+
+        .item:hover {
+            background: #1b1b1e;
+            transform: translateY(-3px);
+        }
+
+        .vazio {
+            grid-column: 1 / -1;
+            padding: 22px;
+            color: #8c8c90;
+            background: #141416;
+            border: 1px solid #2a2a2d;
+            font-size: 14px;
+        }
+
+        @media (max-width: 700px) {
+            body {
+                padding: 30px 20px;
+            }
+
+            .lista {
+                grid-template-columns: 1fr;
+            }
+
+            .informacoes {
+                padding: 22px;
+            }
+
+            .titulo {
+                letter-spacing: -1px;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-    <h1>{{ caso.titulo }}</h1>
+    <main class="container">
 
-    <p><strong>Tipo de crime:</strong> {{ caso.tipo_crime }}</p>
-    <p><strong>Descrição:</strong> {{ caso.descricao }}</p>
+        <a href="{{ url_for('pagina_casos') }}" class="voltar">
+            ← Voltar para os casos
+        </a>
 
-    <h2>Suspeitos</h2>
-    {% for suspeito in suspeitos %}
-        <p>{{ suspeito.nome }}</p>
-    {% else %}
-        <p>Nenhum suspeito cadastrado.</p>
-    {% endfor %}
+        <h1 class="titulo">
+            {{ caso.titulo }}
+        </h1>
 
-    <h2>Evidências</h2>
-    {% for evidencia in evidencias %}
-        <p>{{ evidencia.descricao }}</p>
-    {% else %}
-        <p>Nenhuma evidência cadastrada.</p>
-    {% endfor %}
+        <div class="linha"></div>
 
-    <h2>Testemunhas</h2>
-    {% for testemunha in testemunhas %}
-        <p>{{ testemunha.nome }}</p>
-    {% else %}
-        <p>Nenhuma testemunha cadastrada.</p>
-    {% endfor %}
+        <section class="informacoes">
+            <p>
+                <strong>Tipo de crime:</strong>
+                {{ caso.tipo_crime }}
+            </p>
+
+            <p>
+                <strong>Descrição:</strong>
+                {{ caso.descricao }}
+            </p>
+        </section>
+
+        <section>
+            <h2 class="secao-titulo">
+                <span>01.</span> Suspeitos
+            </h2>
+
+            <div class="lista">
+                {% for suspeito in suspeitos %}
+                    <div class="item">
+                        {{ suspeito.nome }}
+                    </div>
+                {% else %}
+                    <div class="vazio">
+                        Nenhum suspeito cadastrado neste caso.
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section>
+            <h2 class="secao-titulo">
+                <span>02.</span> Evidências
+            </h2>
+
+            <div class="lista">
+                {% for evidencia in evidencias %}
+                    <div class="item">
+                        {{ evidencia.descricao }}
+                    </div>
+                {% else %}
+                    <div class="vazio">
+                        Nenhuma evidência cadastrada neste caso.
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section>
+            <h2 class="secao-titulo">
+                <span>03.</span> Testemunhas
+            </h2>
+
+            <div class="lista">
+                {% for testemunha in testemunhas %}
+                    <div class="item">
+                        {{ testemunha.nome }}
+                    </div>
+                {% else %}
+                    <div class="vazio">
+                        Nenhuma testemunha cadastrada neste caso.
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+
+    </main>
 
 </body>
 </html>
