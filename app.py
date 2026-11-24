@@ -346,6 +346,48 @@ def arquivos_js(nome):
         os.path.join(app.root_path, "js"),
         nome
     )
+    
+
+@app.route("/novo-investigador")
+def pagina_novo_investigador():
+    return render_template("cadastrar_investigador.html")
+
+
+
+@app.route("/novo-investigador")
+def pagina_novo_investigador():
+    return render_template("cadastrar_investigador.html")
+
+
+@app.route("/salvar-investigador", methods=["POST"])
+def salvar_investigador():
+    nome = campo("nome")
+    matricula = campo("matricula")
+    cargo = campo("cargo")
+    telefone = campo("telefone")
+    email = campo("email")
+
+    if not all([nome, matricula, cargo, telefone, email]):
+        flash("Preencha todos os campos obrigatórios.", "erro")
+        return redirect(url_for("pagina_novo_investigador"))
+
+    ok = executar(
+        """
+        INSERT INTO investigadores
+        (nome, matricula, cargo, telefone, email)
+        VALUES (%s, %s, %s, %s, %s)
+        """,
+        (nome, matricula, cargo, telefone, email)
+    )
+
+    avisar(ok, "Investigador cadastrado com sucesso.")
+
+    if ok:
+        return redirect(url_for("pagina_investigadores"))
+
+    return redirect(url_for("pagina_novo_investigador"))
+
+
 
 
 if __name__ == "__main__":

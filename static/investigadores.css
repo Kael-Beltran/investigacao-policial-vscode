@@ -99,3 +99,19 @@ label {
   display: inline-block;
   vertical-align: middle;
 }
+
+.botao-adicionar {
+    display: inline-block;
+    margin-bottom: 30px;
+    padding: 14px 20px;
+    background: #e84545;
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 700;
+    transition: .2s;
+}
+
+.botao-adicionar:hover {
+    background: #b81f26;
+}

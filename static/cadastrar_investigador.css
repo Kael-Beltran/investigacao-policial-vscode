@@ -1,0 +1,173 @@
+
+* {
+    box-sizing: border-box;
+}
+
+.cadastro-investigador {
+    min-height: 100vh;
+    padding: 35px 5%;
+    background: #0c0c0d;
+    color: #f4f4f2;
+    font-family: "Manrope", sans-serif;
+}
+
+.voltar {
+    display: inline-block;
+    margin-bottom: 28px;
+    color: #8c8c90;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color .2s;
+}
+
+.voltar:hover {
+    color: #e84545;
+}
+
+.formulario-container {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px;
+    border: 1px solid #2a2a2d;
+    border-left: 2px solid #e84545;
+    background: linear-gradient(135deg, #151517, #101012);
+}
+
+.identificacao {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #e84545;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+.quadrado {
+    width: 9px;
+    height: 9px;
+    background: #e84545;
+}
+
+.separador {
+    color: #777;
+}
+
+.formulario-container h1 {
+    margin: 20px 0;
+    font-size: clamp(38px, 5vw, 64px);
+    line-height: 1.1;
+    font-weight: 500;
+    letter-spacing: -2px;
+}
+
+.formulario-container h1 span {
+    color: #e84545;
+}
+
+.linha-vermelha {
+    width: 18px;
+    height: 2px;
+    margin: 25px 0 18px;
+    background: #e84545;
+}
+
+.descricao {
+    max-width: 520px;
+    margin-bottom: 38px;
+    padding-left: 16px;
+    border-left: 2px solid #e84545;
+    color: #8c8c90;
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+.campo {
+    margin-bottom: 25px;
+}
+
+.campo label {
+    display: block;
+    margin-bottom: 10px;
+    color: #f4f4f2;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.campo label span {
+    color: #e84545;
+}
+
+.campo input {
+    width: 100%;
+    height: 54px;
+    padding: 0 17px;
+    border: 1px solid #303034;
+    outline: none;
+    background: #111113;
+    color: #f4f4f2;
+    font-family: inherit;
+    font-size: 14px;
+    transition: border-color .2s;
+}
+
+.campo input:focus {
+    border-color: #e84545;
+}
+
+.campo input::placeholder {
+    color: #69696e;
+}
+
+.formulario-container button {
+    width: 100%;
+    margin-top: 12px;
+    padding: 17px;
+    border: none;
+    background: #e84545;
+    color: #fff;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .2s, transform .2s;
+}
+
+.formulario-container button:hover {
+    background: #b81f26;
+    transform: translateY(-2px);
+}
+
+.mensagem {
+    margin-bottom: 20px;
+    padding: 14px;
+    border: 1px solid #444;
+    font-size: 14px;
+}
+
+.mensagem-erro {
+    color: #ff7777;
+    border-color: #8d3030;
+    background: #251314;
+}
+
+.mensagem-ok {
+    color: #80d69a;
+    border-color: #28633a;
+    background: #122218;
+}
+
+@media (max-width: 600px) {
+    .cadastro-investigador {
+        padding: 25px 15px;
+    }
+
+    .formulario-container {
+        padding: 28px 20px;
+    }
+
+    .formulario-container h1 {
+        font-size: 40px;
+    }
+}
