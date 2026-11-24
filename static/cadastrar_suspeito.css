@@ -12,10 +12,11 @@ body {
 }
 
 h1 {
-    margin: 0 0 20px;
+    margin: 0 0 30px;
     font-size: clamp(32px, 4vw, 64px);
     font-weight: 500;
     letter-spacing: -2px;
+    color: #f4f4f2;
 }
 
 h1 span {
@@ -25,37 +26,61 @@ h1 span {
 h1::after {
     content: "";
     display: block;
-    width: 18px;
-    height: 2px;
+    width: 35px;
+    height: 3px;
     margin-top: 20px;
     background: #e84545;
+}
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid #2a2a2e;
+    border-radius: 10px;
+    background: #141416;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    background: #fff;
-    color: #666;
+    background: #141416;
+    color: #f4f4f2;
     font-size: 14px;
 }
 
 thead {
-    background: #f1f1f1;
-    color: #333;
+    background: #202023;
+    color: #fff;
 }
 
 th, td {
-    padding: 15px 14px;
-    border: 1px solid #d9d9d9;
+    padding: 17px 15px;
+    border-bottom: 1px solid #2a2a2e;
     text-align: left;
 }
 
 th {
     font-weight: 700;
+    color: #e84545;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: .7px;
+}
+
+td {
+    color: #d1d1d3;
+}
+
+tbody tr {
+    transition: background .2s;
 }
 
 tbody tr:hover {
-    background: #f5f5f5;
+    background: #222225;
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
 }
 
 .exportar,
@@ -63,7 +88,7 @@ button {
     display: inline-block;
     padding: 15px 22px;
     border: none;
-    border-radius: 9px;
+    border-radius: 8px;
     background: #df5151;
     color: #fff;
     font-family: inherit;
@@ -94,5 +119,9 @@ button:hover {
 
     h1 {
         font-size: 34px;
+    }
+
+    th, td {
+        padding: 13px 12px;
     }
 }
