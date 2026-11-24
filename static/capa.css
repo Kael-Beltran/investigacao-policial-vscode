@@ -1,8 +1,4 @@
 
-* {
-  box-sizing: border-box;
-}
-
 .capa {
   --c-bg: #0c0c0d;
   --c-ink: #f4f4f2;
@@ -116,44 +112,40 @@
 .capa-logo {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
   font-weight: 700;
-  font-size: 25px;
-  letter-spacing: -.5px;
-  transform: translateX(-18px);
+  font-size: 17px;
 }
 
 .capa-logo i {
-  width: 13px;
-  height: 13px;
+  width: 10px;
+  height: 10px;
   background: var(--c-red);
   display: block;
-  flex-shrink: 0;
 }
 
 .capa-hot {
-  font-size: 15px;
+  font-size: 13px;
   color: var(--c-muted);
 }
 
 .capa-hot b {
   color: var(--c-ink);
   font-weight: 700;
-  font-size: 18px;
-  margin-left: 7px;
+  font-size: 15px;
+  margin-left: 6px;
 }
 
 .capa-mid {
   position: relative;
   z-index: 3;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 260px;
+  grid-template-columns: minmax(0, 1fr) 230px;
   align-items: center;
   gap: 40px;
   width: 100%;
-  max-width: 1500px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding-left: clamp(55px, 5vw, 85px);
 }
 
 .capa-side {
@@ -161,13 +153,13 @@
 }
 
 .capa-mid > div:not(.capa-side) {
-  margin-left: 0;
+  margin-left: -35px;
 }
 
 .capa-title {
   margin: 0 0 36px;
   max-width: 8em;
-  font-weight: 450;
+  font-weight: 500;
   font-size: clamp(48px, 5.6vw, 76px);
   line-height: 1.04;
   letter-spacing: -.025em;
@@ -230,7 +222,7 @@
   justify-content: flex-end;
   align-items: center;
   gap: 14px;
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 500;
   color: var(--c-muted);
   transition: color .2s;
@@ -284,9 +276,12 @@
 
 @media (max-width: 1200px) {
   .capa-mid {
-    grid-template-columns: minmax(0, 1fr) 220px;
+    grid-template-columns: minmax(0, 1fr) 200px;
     gap: 25px;
-    padding-left: 35px;
+  }
+
+  .capa-mid > div:not(.capa-side) {
+    margin-left: 0;
   }
 
   .capa-menu {
@@ -299,11 +294,6 @@
     padding: 22px 22px 26px;
   }
 
-  .capa-logo {
-    font-size: 19px;
-    transform: none;
-  }
-
   .capa-mid {
     grid-template-columns: 1fr;
     align-content: start;
@@ -311,9 +301,9 @@
     gap: 25px;
   }
 
-.capa-mid > div:not(.capa-side) {
-  margin-left: -45px;
-}
+  .capa-mid > div:not(.capa-side) {
+    margin-left: 0;
+  }
 
   .capa-title {
     font-size: clamp(42px, 8vw, 60px);
@@ -392,7 +382,7 @@
   }
 
   .capa-logo {
-    font-size: 17px;
+    font-size: 15px;
   }
 }
 
