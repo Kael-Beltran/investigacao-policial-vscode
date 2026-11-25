@@ -4,7 +4,7 @@ from datetime import date
 import calendar
 import psycopg2
 import psycopg2.extras
-from create_pdf import criar_pdf
+from create_pdf import criar_pdf, criar_pdf_caso
 from flask import Flask, flash, redirect, render_template, request, send_file, send_from_directory, url_for
 
 try:
@@ -324,8 +324,47 @@ def salvar_testemunha():
     return redirect(url_for("pagina_adicionar_informacoes"))
 
 
-@app.route("/exportar-pdf-suspeitos")
-def exportar_pdf_suspeitos():
+@app.route("/exportar-pdf-caso/<int:caso_id>")
+def exportar_pdf_caso(caso_id):
+    caso = consultar(
+        "SELECT * FROM casos WHERE id = %s",
+        (caso_id,)
+    )
+
+    if not caso:
+        return "Caso não encontrado", 404
+
+    caso = caso[0]
+
+    suspeitos = consultar(
+        "SELECT * FROM suspeitos WHERE caso_id = %s",
+        (caso_id,)
+    )
+
+    evidencias = consultar(
+        "SELECT * FROM evidencias WHERE caso_id = %s",
+        (caso_id,)
+    )
+
+    testemunhas = consultar(
+        "SELECT * FROM testemunhas WHERE caso_id = %s",
+        (caso_id,)
+    )
+
+    arquivo = criar_pdf_caso(
+        caso,
+        suspeitos,
+        evidencias,
+        testemunhas
+    )
+
+    return send_file(
+        arquivo,
+        mimetype="application/pdf",
+        as_attachment=True,
+        download_name=f"caso_{caso_id}.pdf"
+    )
+    
     dados = consultar("SELECT nome, cpf FROM suspeitos ORDER BY id")
     lista = [
         f"{x['nome'] or 'Não informado'} (CPF: {x['cpf'] or 'Não informado'})"

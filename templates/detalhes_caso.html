@@ -1,4 +1,4 @@
-
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -137,6 +137,28 @@
             color: #8c8c90;
         }
 
+        .acoes {
+            margin-top: 30px;
+        }
+
+        .btn-export-pdf {
+            display: inline-block;
+            padding: 15px 22px;
+            border-radius: 8px;
+            background: #df5151;
+            color: #fff;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: .2s;
+        }
+
+        .btn-export-pdf:hover {
+            background: #b81f26;
+            transform: translateY(-2px);
+        }
+
         @media (max-width: 600px) {
             body {
                 padding: 20px 14px 40px;
@@ -158,6 +180,8 @@
                 font-size: 20px;
             }
         }
+
+        
     </style>
 </head>
 
@@ -270,6 +294,15 @@
             </div>
 
         </section>
+
+        <div class="acoes">
+            <a
+                href="{{ url_for('exportar_pdf_caso', caso_id=caso.id) }}"
+                class="btn-export-pdf"
+            >
+                Exportar este caso em PDF
+            </a>
+        </div>
 
     </main>
 
