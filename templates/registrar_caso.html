@@ -151,6 +151,18 @@ rel="stylesheet"href="{{ url_for('static', filename='site.css') }}">
                         </select>
                     </div>
 
+                    <div class="field field-full">
+                        <label for="investigador_ids">Investigadores responsáveis</label>
+                        <select id="investigador_ids" name="investigador_ids" multiple size="4">
+                            {% for investigador in investigadores %}
+                                <option value="{{ investigador.id }}">
+                                    {{ investigador.nome }}{% if investigador.cargo %} — {{ investigador.cargo }}{% endif %}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <span class="field-hint">Segure Ctrl (Windows) ou Command (Mac) para selecionar mais de um.</span>
+                    </div>
+
                 </div>
 
                 <div class="form-notice">

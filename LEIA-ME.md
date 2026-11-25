@@ -33,7 +33,9 @@ O app usa a variável de ambiente `DATABASE_URL`. No Neon, copie a connection st
 (de preferência a pooled connection string) e configure-a como `DATABASE_URL`.
 O Neon fornece uma conexão TLS; mantenha `sslmode=require` na URL.
 
-Antes do primeiro uso, execute o conteúdo de `schema.sql` no SQL Editor do Neon.
+Execute o conteúdo atualizado de `schema.sql` no SQL Editor do Neon. Se o banco já
+estiver em uso, execute-o novamente para criar a tabela de vínculo
+`caso_investigadores`, necessária para associar vários investigadores a cada caso.
 Configure também `SECRET_KEY` como variável de ambiente, usando um valor aleatório
 forte; não publique essas variáveis no Git.
 

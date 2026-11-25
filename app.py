@@ -4,7 +4,7 @@ from datetime import date
 import calendar
 import psycopg2
 import psycopg2.extras
-from create_pdf import criar_pdf, criar_pdf_caso
+from create_pdf import criar_pdf, criar_pdf_caso, criar_pdf_investigador
 from flask import Flask, flash, redirect, render_template, request, send_file, send_from_directory, url_for
 
 try:
@@ -170,12 +170,61 @@ def pagina_casos():
     )
 
 
+def salvar_vinculos_investigadores(con, caso_id, investigador_ids):
+    with con.cursor() as cur:
+        if investigador_ids:
+            cur.execute(
+                "SELECT id FROM investigadores WHERE id = ANY(%s)",
+                (investigador_ids,)
+            )
+            encontrados = {row[0] for row in cur.fetchall()}
+            if encontrados != set(investigador_ids):
+                raise ValueError("Um ou mais investigadores selecionados não existem.")
+
+        cur.execute(
+            "DELETE FROM caso_investigadores WHERE caso_id = %s",
+            (caso_id,)
+        )
+        if investigador_ids:
+            cur.executemany(
+                """
+                INSERT INTO caso_investigadores (caso_id, investigador_id)
+                VALUES (%s, %s)
+                """,
+                [(caso_id, investigador_id) for investigador_id in investigador_ids]
+            )
+
+
+def ids_investigadores_form():
+    try:
+        ids = list(dict.fromkeys(
+            int(valor) for valor in request.form.getlist("investigador_ids")
+        ))
+    except ValueError:
+        return None
+    return ids if all(investigador_id > 0 for investigador_id in ids) else None
+
+
 @app.route("/caso/<int:caso_id>")
 def detalhes_caso(caso_id):
     caso = consultar("SELECT * FROM casos WHERE id = %s", (caso_id,))
 
     if not caso:
         return "Caso não encontrado", 404
+
+    investigadores_vinculados_ids = [
+        investigador["id"]
+        for investigador in consultar(
+            """
+            SELECT i.id, i.nome
+            FROM investigadores i
+            JOIN caso_investigadores ci ON ci.investigador_id = i.id
+            WHERE ci.caso_id = %s
+            ORDER BY i.nome
+            """,
+            (caso_id,)
+        )
+    ]
 
     return render_template(
         "detalhes_caso.html",
@@ -191,8 +240,72 @@ def detalhes_caso(caso_id):
         testemunhas=consultar(
             "SELECT * FROM testemunhas WHERE caso_id = %s",
             (caso_id,)
-        )
+        ),
+        investigadores=consultar(
+            "SELECT * FROM investigadores ORDER BY nome"
+        ),
+        investigadores_vinculados_ids=investigadores_vinculados_ids
     )
+
+
+@app.route("/investigador/<int:investigador_id>")
+def detalhes_investigador(investigador_id):
+    investigador = consultar(
+        "SELECT * FROM investigadores WHERE id = %s",
+        (investigador_id,)
+    )
+    if not investigador:
+        return "Investigador não encontrado", 404
+
+    casos = consultar(
+        """
+        SELECT c.*
+        FROM casos c
+        JOIN caso_investigadores ci ON ci.caso_id = c.id
+        WHERE ci.investigador_id = %s
+        ORDER BY c.id
+        """,
+        (investigador_id,)
+    )
+    return render_template(
+        "detalhes_investigador.html",
+        investigador=investigador[0],
+        casos=casos
+    )
+
+
+@app.route("/caso/<int:caso_id>/equipe", methods=["POST"])
+def salvar_equipe_caso(caso_id):
+    investigador_ids = ids_investigadores_form()
+    if investigador_ids is None:
+        flash("A seleção de investigadores é inválida.", "erro")
+        return redirect(url_for("detalhes_caso", caso_id=caso_id))
+
+    con = conectar()
+    if not con:
+        return redirect(url_for("detalhes_caso", caso_id=caso_id))
+
+    try:
+        with con.cursor() as cur:
+            cur.execute("SELECT id FROM casos WHERE id = %s", (caso_id,))
+            if not cur.fetchone():
+                con.rollback()
+                return "Caso não encontrado", 404
+
+        salvar_vinculos_investigadores(con, caso_id, investigador_ids)
+        con.commit()
+        flash("Equipe do caso atualizada com sucesso.", "ok")
+    except ValueError as erro:
+        con.rollback()
+        flash(str(erro), "erro")
+    except Exception as erro:
+        con.rollback()
+        print("Erro ao atualizar equipe do caso:", erro)
+        flash(f"Erro ao atualizar a equipe: {resumo(erro)}", "erro")
+    finally:
+        con.close()
+
+    return redirect(url_for("detalhes_caso", caso_id=caso_id))
 
 
 @app.route("/investigadores")
@@ -218,7 +331,10 @@ def pagina_adicionar_informacoes():
 
 @app.route("/registrar-caso")
 def pagina_registrar_caso():
-    return render_template("registrar_caso.html")
+    return render_template(
+        "registrar_caso.html",
+        investigadores=consultar("SELECT * FROM investigadores ORDER BY nome")
+    )
 
 
 @app.route("/novo-suspeito")
@@ -238,11 +354,39 @@ def pagina_nova_testemunha():
 
 @app.route("/salvar-caso", methods=["POST"])
 def salvar_caso():
-    ok = executar(
-        "INSERT INTO casos (titulo, tipo_crime, descricao) VALUES (%s, %s, %s)",
-        (campo("titulo"), campo("tipo"), campo("descricao"))
-    )
-    avisar(ok, "Caso registrado com sucesso.")
+    investigador_ids = ids_investigadores_form()
+    if investigador_ids is None:
+        flash("A seleção de investigadores é inválida.", "erro")
+        return redirect(url_for("pagina_registrar_caso"))
+
+    con = conectar()
+    if not con:
+        return redirect(url_for("pagina_registrar_caso"))
+
+    try:
+        with con.cursor() as cur:
+            cur.execute(
+                """
+                INSERT INTO casos (titulo, tipo_crime, descricao)
+                VALUES (%s, %s, %s)
+                RETURNING id
+                """,
+                (campo("titulo"), campo("tipo"), campo("descricao"))
+            )
+            caso_id = cur.fetchone()[0]
+        salvar_vinculos_investigadores(con, caso_id, investigador_ids)
+        con.commit()
+        flash("Caso registrado com sucesso.", "ok")
+    except ValueError as erro:
+        con.rollback()
+        flash(str(erro), "erro")
+    except Exception as erro:
+        con.rollback()
+        print("Erro ao registrar caso:", erro)
+        flash(f"Erro ao gravar no banco de dados: {resumo(erro)}", "erro")
+    finally:
+        con.close()
+
     return redirect(url_for("pagina_casos"))
 
 
@@ -363,6 +507,34 @@ def exportar_pdf_caso(caso_id):
         mimetype="application/pdf",
         as_attachment=True,
         download_name=f"caso_{caso_id}.pdf"
+    )
+
+
+@app.route("/exportar-pdf-investigador/<int:investigador_id>")
+def exportar_pdf_investigador(investigador_id):
+    investigador = consultar(
+        "SELECT * FROM investigadores WHERE id = %s",
+        (investigador_id,)
+    )
+    if not investigador:
+        return "Investigador não encontrado", 404
+
+    casos = consultar(
+        """
+        SELECT c.*
+        FROM casos c
+        JOIN caso_investigadores ci ON ci.caso_id = c.id
+        WHERE ci.investigador_id = %s
+        ORDER BY c.id
+        """,
+        (investigador_id,)
+    )
+    arquivo = criar_pdf_investigador(investigador[0], casos)
+    return send_file(
+        arquivo,
+        mimetype="application/pdf",
+        as_attachment=True,
+        download_name=f"investigador_{investigador_id}.pdf"
     )
 
 

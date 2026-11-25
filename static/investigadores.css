@@ -36,6 +36,7 @@ h1::after {
 }
 
 .investigator-card {
+    display: block;
     width: 100%;
     margin-bottom: 12px;
     padding: 22px;
@@ -43,6 +44,11 @@ h1::after {
     border-radius: 10px;
     background: #141416;
     transition: .2s;
+}
+
+a.investigator-card {
+    color: inherit;
+    text-decoration: none;
 }
 
 .investigator-card:hover {

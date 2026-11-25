@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>{{ investigador.nome }} | Investigação Policial</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='investigadores.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='site.css') }}">
+    <style>
+        .section-title {
+            margin: 36px 0 18px;
+            color: #f4f4f2;
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .empty-state {
+            color: #8c8c90;
+        }
+    </style>
+</head>
+<body class="site">
+    {% set ativo = 'investigadores' %}
+    {% include '_cabecalho.html' %}
+
+    <main class="container">
+        <a class="back-btn" href="{{ url_for('pagina_investigadores') }}">← Voltar aos investigadores</a>
+
+        <h1>Ficha do <span>Investigador</span></h1>
+
+        <section class="investigator-card">
+            <h3>{{ investigador.nome }}</h3>
+            <p><strong>Matrícula:</strong> {{ investigador.matricula or 'Não informada' }}</p>
+            <p><strong>Cargo / Patente:</strong> {{ investigador.cargo or 'Não informado' }}</p>
+            <p><strong>Email:</strong> {{ investigador.email or 'Não informado' }}</p>
+            {% if investigador.telefone %}
+                <p><strong>Telefone:</strong> {{ investigador.telefone }}</p>
+            {% endif %}
+        </section>
+
+        <h2 class="section-title">Casos trabalhados</h2>
+
+        {% for caso in casos %}
+            <a class="case-card" href="{{ url_for('detalhes_caso', caso_id=caso.id) }}">
+                <h3>Caso #{{ caso.id }} — {{ caso.titulo }}</h3>
+                <p><strong>Tipo de crime:</strong> {{ caso.tipo_crime or 'Não informado' }}</p>
+                <p><strong>Descrição:</strong> {{ caso.descricao or 'Não informada' }}</p>
+            </a>
+        {% else %}
+            <p class="empty-state">Nenhum caso vinculado a este investigador.</p>
+        {% endfor %}
+
+        <a
+            class="btn-export-pdf"
+            href="{{ url_for('exportar_pdf_investigador', investigador_id=investigador.id) }}"
+        >
+            Baixar relatório em PDF
+        </a>
+    </main>
+</body>
+</html>

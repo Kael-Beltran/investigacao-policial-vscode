@@ -107,6 +107,8 @@ Entre as tabelas utilizadas estão:
 - `testemunhas`
 
 A conexão com o banco é realizada através da variável de ambiente `DATABASE_URL`.
+Para associar vários investigadores a um caso, execute o conteúdo atualizado de
+`schema.sql` no banco; ele cria a tabela `caso_investigadores` usada por essa relação.
 
 ---
 

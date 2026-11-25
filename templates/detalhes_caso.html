@@ -143,6 +143,7 @@
         .btn-export-pdf {
             display: inline-block;
             padding: 15px 22px;
+            border: 0;
             border-radius: 8px;
             background: #df5151;
             color: #fff;
@@ -150,12 +151,35 @@
             font-size: 14px;
             font-weight: 700;
             text-decoration: none;
+            cursor: pointer;
             transition: .2s;
         }
 
         .btn-export-pdf:hover {
             background: #b81f26;
             transform: translateY(-2px);
+        }
+
+        .equipe-form {
+            display: grid;
+            gap: 12px;
+            padding: 20px;
+            background: #111113;
+            border: 1px solid #2a2a2d;
+        }
+
+        .equipe-form label {
+            color: #b8b8bd;
+            font-size: 14px;
+        }
+
+        .equipe-form select {
+            min-height: 100px;
+            padding: 10px;
+            background: #1b1b1e;
+            border: 1px solid #2a2a2d;
+            color: #f4f4f2;
+            font: inherit;
         }
 
         @media (max-width: 600px) {
@@ -200,6 +224,12 @@
             {{ caso.titulo }}
         </h1>
 
+        {% with mensagens = get_flashed_messages(with_categories=true) %}
+            {% for categoria, mensagem in mensagens %}
+                <div class="informacoes">{{ mensagem }}</div>
+            {% endfor %}
+        {% endwith %}
+
         <div class="linha"></div>
 
         <section class="informacoes">
@@ -214,6 +244,22 @@
                 {{ caso.descricao }}
             </p>
 
+        </section>
+
+        <section>
+            <h2 class="secao-titulo"><span>00.</span> Equipe do caso</h2>
+            <form action="{{ url_for('salvar_equipe_caso', caso_id=caso.id) }}" method="POST" class="equipe-form">
+                <label for="investigador_ids">Selecione os investigadores que trabalharam neste caso</label>
+                <select id="investigador_ids" name="investigador_ids" multiple size="4">
+                    {% for investigador in investigadores %}
+                        <option value="{{ investigador.id }}"
+                            {% if investigador.id in investigadores_vinculados_ids %}selected{% endif %}>
+                            {{ investigador.nome }}{% if investigador.cargo %} — {{ investigador.cargo }}{% endif %}
+                        </option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn-export-pdf">Salvar equipe</button>
+            </form>
         </section>
 
         <section>

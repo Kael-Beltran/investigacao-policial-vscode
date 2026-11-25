@@ -216,3 +216,103 @@ def criar_pdf_caso(caso, suspeitos, evidencias, testemunhas):
         )
 
     return BytesIO(pdf.output())
+
+
+def criar_pdf_investigador(investigador, casos):
+    pdf = FPDF(
+        orientation="P",
+        unit="mm",
+        format="A4",
+    )
+    pdf.add_page()
+
+    pdf.set_font("Helvetica", "B", 18)
+    pdf.cell(
+        w=0,
+        h=12,
+        text="Relatorio do Investigador",
+        align="C",
+        new_x="LMARGIN",
+        new_y="NEXT",
+    )
+
+    pdf.ln(5)
+    pdf.set_font("Helvetica", "B", 12)
+    pdf.multi_cell(
+        w=0,
+        h=8,
+        text=investigador["nome"] or "Sem nome",
+        new_x="LMARGIN",
+        new_y="NEXT",
+    )
+
+    pdf.set_font("Helvetica", size=11)
+    pdf.multi_cell(
+        w=0,
+        h=7,
+        text=f"Matricula: {investigador.get('matricula') or 'Nao informada'}",
+        new_x="LMARGIN",
+        new_y="NEXT",
+    )
+    pdf.multi_cell(
+        w=0,
+        h=7,
+        text=f"Cargo: {investigador.get('cargo') or 'Nao informado'}",
+        new_x="LMARGIN",
+        new_y="NEXT",
+    )
+    pdf.multi_cell(
+        w=0,
+        h=7,
+        text=f"Email: {investigador.get('email') or 'Nao informado'}",
+        new_x="LMARGIN",
+        new_y="NEXT",
+    )
+    pdf.ln(5)
+
+    pdf.set_font("Helvetica", "B", 14)
+    pdf.cell(
+        w=0,
+        h=10,
+        text=f"Casos trabalhados: {len(casos)}",
+        new_x="LMARGIN",
+        new_y="NEXT",
+    )
+
+    if casos:
+        for caso in casos:
+            pdf.set_font("Helvetica", "B", 11)
+            pdf.multi_cell(
+                w=0,
+                h=8,
+                text=f"Caso #{caso['id']} - {caso['titulo'] or 'Sem titulo'}",
+                new_x="LMARGIN",
+                new_y="NEXT",
+            )
+            pdf.set_font("Helvetica", size=10)
+            pdf.multi_cell(
+                w=0,
+                h=7,
+                text=f"Tipo de crime: {caso['tipo_crime'] or 'Nao informado'}",
+                new_x="LMARGIN",
+                new_y="NEXT",
+            )
+            pdf.multi_cell(
+                w=0,
+                h=7,
+                text=f"Descricao: {caso['descricao'] or 'Nao informada'}",
+                new_x="LMARGIN",
+                new_y="NEXT",
+            )
+            pdf.ln(3)
+    else:
+        pdf.set_font("Helvetica", size=11)
+        pdf.multi_cell(
+            w=0,
+            h=8,
+            text="Nenhum caso vinculado a este investigador.",
+            new_x="LMARGIN",
+            new_y="NEXT",
+        )
+
+    return BytesIO(pdf.output())

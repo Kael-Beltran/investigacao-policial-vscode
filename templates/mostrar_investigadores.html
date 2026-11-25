@@ -24,13 +24,13 @@
 
     {% if investigadores %}
         {% for inv in investigadores %}
-        <div class="investigator-card">
+        <a class="investigator-card" href="{{ url_for('detalhes_investigador', investigador_id=inv.id) }}">
             <h3>{{ inv.nome }}</h3>
             <p><strong>ID / Badge:</strong> {{ inv.id }}</p>
             <p><strong>Cargo / Patente:</strong> {{ inv.cargo }}</p>
-            <!-- Ajuste os campos abaixo conforme as colunas reais da sua tabela 'investigadores' no PostgreSQL -->
             <p><strong>Email:</strong> {{ inv.email }}</p>
-        </div>
+            <p>Ver casos trabalhados →</p>
+        </a>
         {% endfor %}
     {% else %}
         <p>Nenhum investigador registrado no sistema no momento.</p>
@@ -42,10 +42,6 @@
    
     
 </div>
-
- <a href="{{ url_for('exportar_pdf_suspeitos') }}" class="btn-export-pdf">
-    Exportar PDF
-    </a>
 
 </body>
 </html>
