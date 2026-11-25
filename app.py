@@ -354,10 +354,6 @@ def pagina_novo_investigador():
 
 
 
-@app.route("/novo-investigador")
-def pagina_novo_investigador():
-    return render_template("cadastrar_investigador.html")
-
 
 @app.route("/salvar-investigador", methods=["POST"])
 def salvar_investigador():
