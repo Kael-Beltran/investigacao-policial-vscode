@@ -10,33 +10,37 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='site.css') }}"
+    >
 
     <link
         rel="stylesheet"
         href="{{ url_for('static', filename='cadastrar_testemunha.css') }}"
     >
-    <link rel="stylesheet" href="{{ url_for('static', filename='site.css') }}">
 </head>
 
 <body class="site">
 
     {% set ativo = 'adicionar' %}
-{% include '_cabecalho.html' %}
+    {% include '_cabecalho.html' %}
 
-<div class="page-back">
-    <a
+    <main class="page-shell">
+
+        <div class="page-back">
+            <a
                 href="{{ url_for('pagina_adicionar_informacoes') }}"
                 class="back-link"
             >
                 Voltar ao painel <span>↗</span>
             </a>
-</div>
-
-<main class="page-shell">
-
-        
-
+        </div>
 
         <section class="form-card">
 
@@ -59,7 +63,6 @@
 
             </div>
 
-
             <form
                 action="{{ url_for('salvar_testemunha') }}"
                 method="POST"
@@ -67,9 +70,6 @@
             >
 
                 <div class="form-grid">
-
-
-                    <!-- NOME -->
 
                     <div class="field field-full">
 
@@ -89,9 +89,6 @@
 
                     </div>
 
-
-                    <!-- TELEFONE -->
-
                     <div class="field">
 
                         <label for="telefone">
@@ -108,9 +105,6 @@
 
                     </div>
 
-
-                    <!-- ENDEREÇO -->
-
                     <div class="field">
 
                         <label for="endereco">
@@ -125,9 +119,6 @@
                         >
 
                     </div>
-
-
-                    <!-- DEPOIMENTO -->
 
                     <div class="field field-full">
 
@@ -147,9 +138,6 @@
                         </span>
 
                     </div>
-
-
-                    <!-- CASO -->
 
                     <div class="field">
 
@@ -173,9 +161,7 @@
 
                     </div>
 
-
                 </div>
-
 
                 <div class="form-notice">
 
@@ -190,26 +176,21 @@
 
                 </div>
 
-
                 <button
                     type="submit"
                     class="submit-button"
                 >
-
                     ADICIONAR TESTEMUNHA
 
                     <span class="button-arrow">
                         →
                     </span>
-
                 </button>
-
 
                 <p
                     class="form-message"
                     id="formMessage"
                 ></p>
-
 
                 <div class="form-bottom">
 
@@ -217,19 +198,13 @@
                         href="{{ url_for('pagina_adicionar_informacoes') }}"
                         class="return-link"
                     >
-
                         <span>←</span>
-
                         Voltar para registros
-
                     </a>
 
-
                     <span class="required-note">
-
                         <b>*</b>
                         Campos obrigatórios
-
                     </span>
 
                 </div>
@@ -237,7 +212,6 @@
             </form>
 
         </section>
-
 
         <footer class="page-caption">
 
