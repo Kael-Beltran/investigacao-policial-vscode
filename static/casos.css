@@ -305,6 +305,23 @@ a{
   color:#a6d6a8;
 }
 
+.back-btn,
+.btn-export-pdf {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 15px 22px;
+    border: none;
+    border-radius: 8px;
+    background: #df5151;
+    color: #fff;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: .2s;
+}
+
 @media(max-width:600px){
   body{padding:22px 14px}
   .topbar{align-items:flex-start}

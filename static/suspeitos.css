@@ -98,6 +98,23 @@ button {
     transition: .2s;
 }
 
+.back-btn,
+.btn-export-pdf {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 15px 22px;
+    border: none;
+    border-radius: 8px;
+    background: #df5151;
+    color: #fff;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: .2s;
+}
+
 .exportar:hover,
 button:hover {
     background: #b81f26;
