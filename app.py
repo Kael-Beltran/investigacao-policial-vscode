@@ -250,10 +250,27 @@ def pagina_casos():
 
 @app.route("/caso/<int:caso_id>")
 def detalhes_caso(caso_id):
-    caso = consultar("SELECT * FROM casos WHERE id = %s", (caso_id,))
+    caso = consultar(
+        "SELECT * FROM casos WHERE id = %s",
+        (caso_id,)
+    )
 
     if not caso:
         return "Caso não encontrado", 404
+
+    investigadores_vinculados = consultar(
+        """
+        SELECT investigador_id
+        FROM caso_investigadores
+        WHERE caso_id = %s
+        """,
+        (caso_id,)
+    )
+
+    investigadores_vinculados_ids = [
+        item["investigador_id"]
+        for item in investigadores_vinculados
+    ]
 
     return render_template(
         "detalhes_caso.html",
@@ -275,7 +292,6 @@ def detalhes_caso(caso_id):
         ),
         investigadores_vinculados_ids=investigadores_vinculados_ids
     )
-
 
 @app.route("/investigador/<int:investigador_id>")
 def detalhes_investigador(investigador_id):
