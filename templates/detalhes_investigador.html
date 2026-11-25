@@ -40,7 +40,6 @@
             {% endif %}
         </section>
 
-        <h2 class="section-title">Casos trabalhados</h2>
 
         {% for caso in casos %}
             <a class="case-card" href="{{ url_for('detalhes_caso', caso_id=caso.id) }}">
