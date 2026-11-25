@@ -3,25 +3,39 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Cadastro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Criar conta</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='cadastro.css') }}">
 </head>
 <body>
-    <h1>Criar conta</h1>
+    <main class="cadastro-page">
+        <section class="cadastro-box" aria-labelledby="cadastro-title">
+            <p class="cadastro-eyebrow">Sistema de investigação policial</p>
+            <h1 id="cadastro-title">Criar conta</h1>
+            <p class="cadastro-description">Cadastre seus dados para acessar o sistema.</p>
 
-    {% with mensagens = get_flashed_messages(with_categories=true) %}
-        {% for categoria, mensagem in mensagens %}
-            <p>{{ mensagem }}</p>
-        {% endfor %}
-    {% endwith %}
+            {% with mensagens = get_flashed_messages(with_categories=true) %}
+                {% for categoria, mensagem in mensagens %}
+                    <p class="flash {{ categoria }}" role="alert">{{ mensagem }}</p>
+                {% endfor %}
+            {% endwith %}
 
-    <form method="POST">
-        <input type="text" name="nome" placeholder="Nome" required>
-        <input type="email" name="email" placeholder="E-mail" required>
-        <input type="password" name="senha" placeholder="Senha (mínimo 8 caracteres)" required>
-        <button type="submit">Cadastrar</button>
-    </form>
+            <form class="cadastro-form" method="POST">
+                <label for="nome">Nome</label>
+                <input id="nome" type="text" name="nome" placeholder="Seu nome" autocomplete="name" required>
 
-    <a href="{{ url_for('login') }}">Já tenho uma conta</a>
+                <label for="email">E-mail</label>
+                <input id="email" type="email" name="email" placeholder="nome@exemplo.com" autocomplete="email" required>
+
+                <label for="senha">Senha</label>
+                <input id="senha" type="password" name="senha" placeholder="Mínimo de 8 caracteres" autocomplete="new-password" minlength="8" required>
+
+                <button type="submit">Cadastrar</button>
+            </form>
+
+            <p class="cadastro-footer">Já tem uma conta? <a href="{{ url_for('login') }}">Entrar</a></p>
+        </section>
+    </main>
 </body>
 </html>
   
