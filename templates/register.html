@@ -1,40 +1,27 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Registar - Investigação Policial</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+    <title>Cadastro</title>
 </head>
 <body>
+    <h1>Criar conta</h1>
 
-    <div class="login-box">
-        <h2>Criar Conta</h2>
+    {% with mensagens = get_flashed_messages(with_categories=true) %}
+        {% for categoria, mensagem in mensagens %}
+            <p>{{ mensagem }}</p>
+        {% endfor %}
+    {% endwith %}
 
+    <form method="POST">
+        <input type="text" name="nome" placeholder="Nome" required>
+        <input type="email" name="email" placeholder="E-mail" required>
+        <input type="password" name="senha" placeholder="Senha (mínimo 8 caracteres)" required>
+        <button type="submit">Cadastrar</button>
+    </form>
 
-        {% with messages = get_flashed_messages() %}
-          {% if messages %}
-            <div class="flash">
-              {% for message in messages %}
-                <p>{{ message }}</p>
-              {% endfor %}
-            </div>
-          {% endif %}
-        {% endwith %}
-
-        <form action="/register" method="POST">
-            <label for="email">E-mail:</label>
-            <input type="email" id="email" name="email" required placeholder="seu@email.com">
-
-            <label for="password">Palavra-passe:</label>
-            <input type="password" id="password" name="password" required placeholder="********">
-
-            <button type="submit">Registar</button>
-        </form>
-
-        <p style="text-align: center; margin-top: 15px; font-size: 14px;">
-            Já tem conta? <a href="/login" style="color: #4CAF50; text-decoration: none; font-weight: bold;">Entrar</a>
-        </p>
-    </div>
-
+    <a href="{{ url_for('login') }}">Já tenho uma conta</a>
 </body>
 </html>
+  

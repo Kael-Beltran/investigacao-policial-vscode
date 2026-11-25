@@ -1,37 +1,37 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Login - Meu Site</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
 </head>
 <body>
+    <main class="login-page">
+        <section class="login-box" aria-labelledby="login-title">
+            <p class="login-eyebrow">Sistema de investigação policial</p>
+            <h1 id="login-title">Acesso restrito</h1>
+            <p class="login-description">Entre com suas credenciais para continuar.</p>
 
-    <div class="login-box">
-        <h2>Entrar</h2>
+            {% with mensagens = get_flashed_messages(with_categories=true) %}
+                {% for categoria, mensagem in mensagens %}
+                    <p class="flash {{ categoria }}" role="alert">{{ mensagem }}</p>
+                {% endfor %}
+            {% endwith %}
 
+            <form method="POST">
+                <label for="email">E-mail</label>
+                <input id="email" type="email" name="email" placeholder="nome@exemplo.com" autocomplete="email" required>
 
-        {% with messages = get_flashed_messages() %}
-          {% if messages %}
-            <div class="flash">
-              {% for message in messages %}
-                <p>{{ message }}</p>
-              {% endfor %}
-            </div>
-          {% endif %}
-        {% endwith %}
+                <label for="senha">Senha</label>
+                <input id="senha" type="password" name="senha" placeholder="Digite sua senha" autocomplete="current-password" required>
 
-        <form action="/login" method="POST">
-            <label for="email">E-mail:</label>
-            <input type="email" id="email" name="email" required placeholder="seu@email.com">
+                <button type="submit">Entrar</button>
+            </form>
 
-            <label for="password">Palavra-passe:</label>
-            <input type="password" id="password" name="password" required placeholder="********">
-
-            <button type="submit">Entrar</button>
-        </form>
-    </div>
-
+            <p class="login-footer">Ainda não tem acesso? <a href="{{ url_for('cadastro') }}">Criar conta</a></p>
+        </section>
+    </main>
 </body>
 </html>

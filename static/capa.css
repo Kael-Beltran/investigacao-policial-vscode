@@ -125,6 +125,10 @@
 }
 
 .capa-hot {
+  position: absolute;
+  left: 27%;
+  top: 50%;
+  transform: translateY(-50%);
   font-size: 13px;
   color: var(--c-muted);
 }
@@ -134,6 +138,69 @@
   font-weight: 700;
   font-size: 15px;
   margin-left: 6px;
+}
+
+.capa-auth {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.capa-auth form {
+  margin: 0;
+}
+
+.capa-welcome {
+  max-width: 180px;
+  overflow: hidden;
+  color: var(--c-muted);
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.capa .capa-auth-button {
+  position: relative;
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 0 20px 0 25px;
+  border: 1px solid var(--c-red);
+  background:
+    linear-gradient(135deg, rgba(232, 69, 69, .08) 25%, transparent 25%) 0 0 / 8px 8px,
+    #111113;
+  color: var(--c-ink);
+  cursor: pointer;
+  font: 600 12px/1 "IBM Plex Mono", monospace;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-shadow: 4px 4px 0 var(--c-red2);
+  transition: background-color .2s, border-color .2s, box-shadow .2s, transform .2s;
+}
+
+.capa .capa-auth-button::before {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--c-red);
+  content: "";
+}
+
+.capa .capa-auth-button:hover {
+  border-color: var(--c-red2);
+  background-color: #241012;
+  box-shadow: 2px 2px 0 var(--c-red2);
+  transform: translate(2px, 2px);
+}
+
+.capa .capa-auth-button:focus-visible {
+  outline: 2px solid var(--c-ink);
+  outline-offset: 3px;
 }
 
 .capa-mid {

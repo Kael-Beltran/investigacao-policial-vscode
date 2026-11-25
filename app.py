@@ -5,7 +5,8 @@ import calendar
 import psycopg2
 import psycopg2.extras
 from create_pdf import criar_pdf, criar_pdf_caso, criar_pdf_investigador
-from flask import Flask, flash, redirect, render_template, request, send_file, send_from_directory, url_for
+from flask import Flask, flash, redirect, render_template, request, send_file, send_from_directory, url_for, session
+from werkzeug.security import generate_password_hash, check_password_hash
 
 try:
     from dotenv import load_dotenv
@@ -14,7 +15,20 @@ except ImportError:
     pass
 
 app = Flask(__name__)
-app.secret_key = os.getenv("SECRET_KEY", "troque-esta-chave-em-producao")
+
+# Em produção, configure SECRET_KEY nas variáveis de ambiente da Vercel.
+app.secret_key = os.getenv("SECRET_KEY")
+if not app.secret_key:
+    if os.getenv("VERCEL"):
+        raise RuntimeError("Configure SECRET_KEY nas variáveis de ambiente da Vercel.")
+    app.secret_key = "chave-apenas-para-desenvolvimento-local"
+
+app.config.update(
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="Lax",
+    SESSION_COOKIE_SECURE=bool(os.getenv("VERCEL"))
+)
+
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 
@@ -157,6 +171,115 @@ def avisar(ok, texto):
         flash(texto, "ok")
 
 
+@app.before_request
+def proteger_paginas():
+    # A página inicial e as páginas de autenticação continuam públicas.
+    paginas_publicas = {"home", "login", "cadastro", "arquivos_js", "static"}
+
+    if request.endpoint is None or request.endpoint in paginas_publicas:
+        return
+
+    if "usuario_id" not in session:
+        flash("Faça login para acessar essa página.", "erro")
+        return redirect(url_for("login"))
+
+
+@app.route("/cadastro", methods=["GET", "POST"])
+def cadastro():
+    if request.method == "POST":
+        nome = (request.form.get("nome") or "").strip()
+        email = (request.form.get("email") or "").strip().lower()
+        senha = request.form.get("senha") or ""
+
+        emails_autorizados = {
+            item.strip().lower()
+            for item in os.getenv("EMAILS_AUTORIZADOS", "").split(",")
+            if item.strip()
+        }
+
+        if not nome or not email or not senha:
+            flash("Preencha todos os campos.", "erro")
+            return redirect(url_for("cadastro"))
+
+        if not re.fullmatch(r"[^@\\s]+@[^@\\s]+\\.[^@\\s]+", email):
+            flash("Digite um e-mail válido.", "erro")
+            return redirect(url_for("cadastro"))
+
+        if email not in emails_autorizados:
+            flash("Este e-mail não está autorizado a criar uma conta.", "erro")
+            return redirect(url_for("cadastro"))
+
+        if len(senha) < 8:
+            flash("A senha deve ter pelo menos 8 caracteres.", "erro")
+            return redirect(url_for("cadastro"))
+
+        conexao = conectar()
+        if not conexao:
+            return redirect(url_for("cadastro"))
+
+        try:
+            with conexao.cursor() as cursor:
+                cursor.execute(
+                    """
+                    INSERT INTO usuarios (nome, email, senha_hash)
+                    VALUES (%s, %s, %s)
+                    """,
+                    (nome, email, generate_password_hash(senha))
+                )
+            conexao.commit()
+            flash("Conta criada com sucesso! Faça login.", "ok")
+            return redirect(url_for("login"))
+
+        except psycopg2.errors.UniqueViolation:
+            conexao.rollback()
+            flash("Este e-mail já possui uma conta.", "erro")
+            return redirect(url_for("cadastro"))
+
+        except Exception as erro:
+            conexao.rollback()
+            print("Erro no cadastro:", erro)
+            flash(f"Não foi possível criar a conta: {resumo(erro)}", "erro")
+            return redirect(url_for("cadastro"))
+
+        finally:
+            conexao.close()
+
+    return render_template("cadastro.html")
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        email = (request.form.get("email") or "").strip().lower()
+        senha = request.form.get("senha") or ""
+
+        usuarios = consultar(
+            "SELECT id, nome, email, senha_hash FROM usuarios WHERE email = %s",
+            (email,)
+        )
+
+        if not usuarios or not check_password_hash(usuarios[0]["senha_hash"], senha):
+            flash("E-mail ou senha incorretos.", "erro")
+            return redirect(url_for("login"))
+
+        usuario = usuarios[0]
+        session.clear()
+        session["usuario_id"] = usuario["id"]
+        session["usuario_nome"] = usuario["nome"]
+
+        flash("Login realizado com sucesso!", "ok")
+        return redirect(url_for("home"))
+
+    return render_template("login.html")
+
+
+@app.route("/logout", methods=["POST"])
+def logout():
+    session.clear()
+    flash("Você saiu da sua conta.", "ok")
+    return redirect(url_for("home"))
+
+
 @app.route("/")
 def home():
     return render_template("index.html")
@@ -170,61 +293,12 @@ def pagina_casos():
     )
 
 
-def salvar_vinculos_investigadores(con, caso_id, investigador_ids):
-    with con.cursor() as cur:
-        if investigador_ids:
-            cur.execute(
-                "SELECT id FROM investigadores WHERE id = ANY(%s)",
-                (investigador_ids,)
-            )
-            encontrados = {row[0] for row in cur.fetchall()}
-            if encontrados != set(investigador_ids):
-                raise ValueError("Um ou mais investigadores selecionados não existem.")
-
-        cur.execute(
-            "DELETE FROM caso_investigadores WHERE caso_id = %s",
-            (caso_id,)
-        )
-        if investigador_ids:
-            cur.executemany(
-                """
-                INSERT INTO caso_investigadores (caso_id, investigador_id)
-                VALUES (%s, %s)
-                """,
-                [(caso_id, investigador_id) for investigador_id in investigador_ids]
-            )
-
-
-def ids_investigadores_form():
-    try:
-        ids = list(dict.fromkeys(
-            int(valor) for valor in request.form.getlist("investigador_ids")
-        ))
-    except ValueError:
-        return None
-    return ids if all(investigador_id > 0 for investigador_id in ids) else None
-
-
 @app.route("/caso/<int:caso_id>")
 def detalhes_caso(caso_id):
     caso = consultar("SELECT * FROM casos WHERE id = %s", (caso_id,))
 
     if not caso:
         return "Caso não encontrado", 404
-
-    investigadores_vinculados_ids = [
-        investigador["id"]
-        for investigador in consultar(
-            """
-            SELECT i.id, i.nome
-            FROM investigadores i
-            JOIN caso_investigadores ci ON ci.investigador_id = i.id
-            WHERE ci.caso_id = %s
-            ORDER BY i.nome
-            """,
-            (caso_id,)
-        )
-    ]
 
     return render_template(
         "detalhes_caso.html",

@@ -12,8 +12,6 @@
 </head>
 <body>
 
-67
-
 <!-- ===== NOVA CAPA ===== -->
 <main class="capa">
   <div class="capa-slab" aria-hidden="true"></div>
@@ -27,6 +25,16 @@
   <header class="capa-top">
     <a class="capa-logo" href="{{ url_for('home') }}"><i></i>Investigação Policial</a>
     <div class="capa-hot">Suporte<b>(0800) 123 45 67</b></div>
+    <div class="capa-auth">
+      {% if session.get('usuario_id') %}
+        <span class="capa-welcome">Bem-vindo, {{ session.get('usuario_nome') }}!</span>
+        <form action="{{ url_for('logout') }}" method="POST">
+          <button class="capa-auth-button" type="submit">Sair</button>
+        </form>
+      {% else %}
+        <a class="capa-auth-button" href="{{ url_for('login') }}">Entrar</a>
+      {% endif %}
+    </div>
   </header>
 
   <section class="capa-mid">
@@ -57,6 +65,9 @@
     <a class="capa-link" href="{{ url_for('pagina_adicionar_informacoes') }}">Novo registro</a>
   </footer>
 </main>
+
+
+
 
 <!-- ===== SEÇÕES ABAIXO DA CAPA (mantidas) ===== -->
 <section class="sobre" id="sobre">
