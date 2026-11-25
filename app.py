@@ -364,7 +364,10 @@ def exportar_pdf_caso(caso_id):
         as_attachment=True,
         download_name=f"caso_{caso_id}.pdf"
     )
-    
+
+
+@app.route("/exportar-pdf-suspeitos")
+def exportar_pdf_suspeitos():
     dados = consultar("SELECT nome, cpf FROM suspeitos ORDER BY id")
     lista = [
         f"{x['nome'] or 'Não informado'} (CPF: {x['cpf'] or 'Não informado'})"

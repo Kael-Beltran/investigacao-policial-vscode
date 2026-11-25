@@ -93,7 +93,13 @@ def criar_pdf_caso(caso, suspeitos, evidencias, testemunhas):
     pdf.ln(5)
 
     pdf.set_font("Helvetica", "B", 11)
-    pdf.cell(w=35, h=8, text="Tipo de crime:")
+    pdf.cell(
+        w=0,
+        h=8,
+        text="Tipo de crime:",
+        new_x="LMARGIN",
+        new_y="NEXT",
+    )
     pdf.set_font("Helvetica", size=11)
     pdf.multi_cell(
         w=0,
@@ -102,7 +108,13 @@ def criar_pdf_caso(caso, suspeitos, evidencias, testemunhas):
     )
 
     pdf.set_font("Helvetica", "B", 11)
-    pdf.cell(w=30, h=8, text="Descricao:")
+    pdf.cell(
+        w=0,
+        h=8,
+        text="Descricao:",
+        new_x="LMARGIN",
+        new_y="NEXT",
+    )
     pdf.set_font("Helvetica", size=11)
     pdf.multi_cell(
         w=0,
