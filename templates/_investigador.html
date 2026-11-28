@@ -1,0 +1,5 @@
+{# Funções de apoio para os cartões de investigador. Use: {% from '_investigador.html' import iniciais %} #}
+{% macro iniciais(nome) -%}
+{%- set partes = (nome or '?').split() -%}
+{%- if partes|length > 1 -%}{{ (partes[0][0] ~ partes[-1][0])|upper }}{%- else -%}{{ (partes[0][0] if partes else '?')|upper }}{%- endif -%}
+{%- endmacro %}

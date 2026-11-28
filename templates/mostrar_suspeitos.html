@@ -8,6 +8,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{{ url_for('static', filename='suspeitos.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='site.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='exportar-pdf.css') }}">
+{% include '_datatables_css.html' %}
 </head>
 <body class="site">
 
@@ -17,10 +19,13 @@
 <div class="container">
     <h1>Banco de Dados: <span class="red">Suspeitos</span></h1>
 
-    <!-- Exibição dos dados em formato de tabela -->
     {% if suspeitos %}
-        <div class="table-container">
-            <table class="suspects-table">
+        <div class="pdf-bar">
+            <a href="{{ url_for('exportar_pdf_suspeitos') }}" class="btn-export-pdf">Exportar todos os suspeitos em PDF</a>
+        </div>
+
+        <div class="tabela-dados">
+            <table class="suspects-table js-datatable">
                 <thead>
                     <tr>
                         <th>Nome</th>
@@ -52,10 +57,7 @@
     </a>
 </div>
 
-<!-- Botão Exportar PDF fixado no canto inferior direito -->
-<a href="{{ url_for('exportar_pdf_suspeitos') }}" class="btn-export-pdf">
-    Exportar PDF
-</a>
+{% include '_datatables_js.html' %}
 
 </body>
-</html>
+</html>

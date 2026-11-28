@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='investigadores.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='site.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='exportar-pdf.css') }}">
     <style>
         .section-title {
             margin: 36px 0 18px;
@@ -30,16 +31,27 @@
 
         <h1>Ficha do <span>Investigador</span></h1>
 
-        <section class="investigator-card">
-            <h3>{{ investigador.nome }}</h3>
-            <p><strong>Matrícula:</strong> {{ investigador.matricula or 'Não informada' }}</p>
-            <p><strong>Cargo / Patente:</strong> {{ investigador.cargo or 'Não informado' }}</p>
-            <p><strong>Email:</strong> {{ investigador.email or 'Não informado' }}</p>
-            {% if investigador.telefone %}
-                <p><strong>Telefone:</strong> {{ investigador.telefone }}</p>
-            {% endif %}
+        <div class="pdf-bar">
+            <a class="btn-export-pdf" href="{{ url_for('exportar_pdf_investigador', investigador_id=investigador.id) }}">Baixar relatório em PDF</a>
+        </div>
+
+        <section class="inv-card inv-perfil">
+            <div class="inv-card__topo">
+                <span>
+                    <h2 class="inv-nome">{{ investigador.nome }}</h2>
+                    <span class="inv-cargo">{{ investigador.cargo or 'Cargo não informado' }}</span>
+                </span>
+                <span class="inv-total"><b>{{ casos|length }}</b>{{ 'caso' if casos|length == 1 else 'casos' }}</span>
+            </div>
+
+            <dl class="inv-dados">
+                <div><dt>Matrícula</dt><dd>{{ investigador.matricula or 'Não informada' }}</dd></div>
+                <div><dt>Email</dt><dd>{{ investigador.email or 'Não informado' }}</dd></div>
+                <div><dt>Telefone</dt><dd>{{ investigador.telefone or 'Não informado' }}</dd></div>
+            </dl>
         </section>
 
+        <h2 class="inv-secao"><span>—</span> Casos trabalhados</h2>
 
         {% for caso in casos %}
             <a class="case-card" href="{{ url_for('detalhes_caso', caso_id=caso.id) }}">
@@ -48,15 +60,8 @@
                 <p><strong>Descrição:</strong> {{ caso.descricao or 'Não informada' }}</p>
             </a>
         {% else %}
-            <p class="empty-state">Nenhum caso vinculado a este investigador.</p>
+            <p class="empty-state" style="grid-column: 1 / -1;">Nenhum caso vinculado a este investigador.</p>
         {% endfor %}
-
-        <a
-            class="btn-export-pdf"
-            href="{{ url_for('exportar_pdf_investigador', investigador_id=investigador.id) }}"
-        >
-            Baixar relatório em PDF
-        </a>
     </main>
 </body>
 </html>

@@ -64,7 +64,7 @@ def criar_pdf(nomes):
     return BytesIO(pdf.output())
 
 
-def criar_pdf_caso(caso, suspeitos, evidencias, testemunhas):
+def criar_pdf_caso(caso, suspeitos, evidencias, testemunhas, equipe=None):
     pdf = FPDF(
         orientation="P",
         unit="mm",
@@ -123,6 +123,46 @@ def criar_pdf_caso(caso, suspeitos, evidencias, testemunhas):
     )
 
     pdf.ln(8)
+
+    pdf.set_font("Helvetica", "B", 15)
+    pdf.cell(
+        w=0,
+        h=10,
+        text="00. Equipe do caso",
+        new_x="LMARGIN",
+        new_y="NEXT",
+    )
+
+    pdf.set_font("Helvetica", size=11)
+
+    def texto_seguro(valor):
+        # As fontes padrão do PDF só aceitam caracteres latin-1.
+        return str(valor).encode("latin-1", "replace").decode("latin-1")
+
+    if equipe:
+        for investigador in equipe:
+            linha = investigador["nome"] or "Nao informado"
+            if investigador.get("cargo"):
+                linha += f" - {investigador['cargo']}"
+            pdf.multi_cell(
+                w=0,
+                h=8,
+                text=texto_seguro(linha),
+                border=1,
+                new_x="LMARGIN",
+                new_y="NEXT",
+            )
+    else:
+        pdf.cell(
+            w=0,
+            h=8,
+            text="Nenhum investigador vinculado.",
+            border=1,
+            new_x="LMARGIN",
+            new_y="NEXT",
+        )
+
+    pdf.ln(6)
 
     pdf.set_font("Helvetica", "B", 15)
     pdf.cell(
@@ -264,6 +304,13 @@ def criar_pdf_investigador(investigador, casos):
     pdf.multi_cell(
         w=0,
         h=7,
+        text=f"Telefone: {investigador.get('telefone') or 'Nao informado'}",
+        new_x="LMARGIN",
+        new_y="NEXT",
+    )
+    pdf.multi_cell(
+        w=0,
+        h=7,
         text=f"Email: {investigador.get('email') or 'Nao informado'}",
         new_x="LMARGIN",
         new_y="NEXT",
@@ -314,5 +361,39 @@ def criar_pdf_investigador(investigador, casos):
             new_x="LMARGIN",
             new_y="NEXT",
         )
+
+    return BytesIO(pdf.output())
+
+def criar_pdf_registro(titulo, registros, campos):
+    """Gera um PDF simples com os campos informados de um ou mais registros."""
+    pdf = FPDF(orientation="P", unit="mm", format="A4")
+    pdf.set_auto_page_break(auto=True, margin=15)
+    pdf.add_page()
+
+    def texto_seguro(valor):
+        texto = "Não informado" if valor is None or valor == "" else str(valor)
+        return texto.encode("latin-1", "replace").decode("latin-1")
+
+    pdf.set_font("Helvetica", "B", 18)
+    pdf.multi_cell(0, 11, texto_seguro(titulo), align="C", new_x="LMARGIN", new_y="NEXT")
+    pdf.ln(4)
+    pdf.set_font("Helvetica", size=11)
+    pdf.cell(0, 8, f"Quantidade de registros: {len(registros)}", new_x="LMARGIN", new_y="NEXT")
+    pdf.ln(3)
+
+    if not registros:
+        pdf.multi_cell(0, 8, "Nenhum registro encontrado.", new_x="LMARGIN", new_y="NEXT")
+    else:
+        for indice, registro in enumerate(registros, start=1):
+            if pdf.get_y() > 255:
+                pdf.add_page()
+            pdf.set_font("Helvetica", "B", 13)
+            pdf.multi_cell(0, 9, f"Registro {indice}", border=1, new_x="LMARGIN", new_y="NEXT")
+            pdf.set_font("Helvetica", size=10)
+            for rotulo, chave in campos:
+                valor = texto_seguro(registro.get(chave))
+                pdf.multi_cell(0, 7, f"{rotulo}: {valor}", border="LR", new_x="LMARGIN", new_y="NEXT")
+            pdf.cell(0, 2, "", border="B", new_x="LMARGIN", new_y="NEXT")
+            pdf.ln(4)
 
     return BytesIO(pdf.output())

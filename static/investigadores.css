@@ -1,3 +1,4 @@
+
 * {
     box-sizing: border-box;
 }
@@ -35,46 +36,158 @@ h1::after {
     width: 100%;
 }
 
-.investigator-card {
-    display: block;
-    width: 100%;
-    margin-bottom: 12px;
-    padding: 22px;
-    border: 1px solid #2a2a2e;
-    border-radius: 10px;
-    background: #141416;
-    transition: .2s;
+/* ---------- Cartões de investigador ---------- */
+/* Cor da listra do topo dos cartões */
+.inv-grid,
+.inv-perfil,
+.inv-secao {
+    --inv-faixa: #ff7777;
 }
 
-a.investigator-card {
+.inv-grid {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+    margin: 0 0 8px;
+}
+
+.inv-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    background: rgba(255, 255, 255, .025);
+    border: 1px solid #2a2a2d;
+    border-top: 2px solid var(--inv-faixa, #d35858);
+    transition: background .2s, border-color .2s;
+}
+
+.inv-card:hover {
+    background: rgba(255, 255, 255, .045);
+    border-color: #3a3a3e;
+    border-top-color: var(--inv-faixa, #d35858);
+}
+
+.inv-card__topo {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 24px 22px 18px;
     color: inherit;
     text-decoration: none;
 }
 
-.investigator-card:hover {
-    background: #222225;
-}
-
-.investigator-card h3 {
-    margin: 0 0 18px;
+.inv-nome {
+    margin: 0;
     color: #f4f4f2;
-    font-size: 20px;
-    font-weight: 600;
+    font: 600 18px/1.25 "Manrope", sans-serif;
+    letter-spacing: -.01em;
+    overflow-wrap: anywhere;
 }
 
-.investigator-card p {
-    margin: 8px 0;
-    color: #d1d1d3;
-    font-size: 14px;
+.inv-cargo {
+    display: block;
+    margin-top: 3px;
+    color: #8c8c90;
+    font-size: 13px;
 }
 
-.investigator-card strong {
-    color: #e84545;
-    font-weight: 700;
+.inv-dados {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0 22px 18px;
 }
 
-.back-btn,
-.btn-export-pdf {
+.inv-dados div {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 8px;
+    border-top: 1px solid #2a2a2d;
+    font-size: 13px;
+}
+
+.inv-dados dt {
+    flex: none;
+    color: #8c8c90;
+}
+
+.inv-dados dd {
+    margin: 0;
+    color: #f4f4f2;
+    text-align: right;
+    overflow-wrap: anywhere;
+}
+
+.inv-card__rodape {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: auto;
+    padding: 12px 22px;
+    border-top: 1px solid #2a2a2d;
+    background: rgba(255, 255, 255, .015);
+}
+
+.inv-link {
+    color: #f4f4f2;
+    font: 600 12.5px "Manrope", sans-serif;
+    text-decoration: none;
+    transition: color .2s;
+}
+
+.inv-link:hover {
+    color: var(--inv-faixa, #d35858);
+}
+
+/* ---------- Ficha do investigador (página de detalhes) ---------- */
+.inv-perfil {
+    grid-column: 1 / -1;
+    margin: 0 0 8px;
+}
+
+.inv-perfil .inv-card__topo {
+    padding: 28px 26px 22px;
+}
+
+.inv-perfil .inv-perfil .inv-nome {
+    font-size: 26px;
+}
+
+.inv-perfil .inv-dados {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0 28px;
+    padding: 0 26px 22px;
+}
+
+.inv-total {
+    margin-left: auto;
+    text-align: right;
+    color: #8c8c90;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.inv-total b {
+    display: block;
+    color: #f4f4f2;
+    font: 500 28px/1.1 "Manrope", sans-serif;
+}
+
+.inv-secao {
+    grid-column: 1 / -1;
+    margin: 28px 0 14px;
+    color: #f4f4f2;
+    font: 600 20px "Manrope", sans-serif;
+}
+
+.inv-secao span {
+    color: var(--inv-faixa, #d35858);
+}
+
+.back-btn {
     display: inline-block;
     margin-top: 20px;
     padding: 15px 22px;
@@ -90,8 +203,7 @@ a.investigator-card {
     transition: .2s;
 }
 
-.back-btn:hover,
-.btn-export-pdf:hover {
+.back-btn:hover {
     background: #b81f26;
     transform: translateY(-2px);
 }
@@ -109,7 +221,21 @@ a.investigator-card {
         font-size: 34px;
     }
 
-    .investigator-card {
+    .inv-card__topo,
+    .inv-perfil .inv-card__topo {
         padding: 18px;
+    }
+
+    .inv-dados,
+    .inv-perfil .inv-dados {
+        padding: 0 18px 16px;
+    }
+
+    .inv-card__rodape {
+        padding: 12px 18px;
+    }
+
+    .inv-total {
+        display: none;
     }
 }

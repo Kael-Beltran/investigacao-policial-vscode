@@ -4,7 +4,7 @@ from datetime import date
 import calendar
 import psycopg2
 import psycopg2.extras
-from create_pdf import criar_pdf, criar_pdf_caso, criar_pdf_investigador
+from create_pdf import criar_pdf, criar_pdf_caso, criar_pdf_investigador, criar_pdf_registro
 from flask import Flask, flash, redirect, render_template, request, send_file, send_from_directory, url_for, session
 from werkzeug.security import check_password_hash
 
@@ -171,6 +171,118 @@ def avisar(ok, texto):
         flash(texto, "ok")
 
 
+def ids_investigadores_form():
+    """Lê os investigadores marcados no formulário (campo "investigador_ids").
+
+    Retorna uma lista de ids inteiros, sem repetição e na ordem recebida.
+    Lista vazia é válida (caso sem equipe). Retorna None se algum valor for inválido.
+    """
+    ids = []
+    for valor in request.form.getlist("investigador_ids"):
+        valor = (valor or "").strip()
+        if not re.fullmatch(r"[0-9]+", valor):
+            return None
+        numero = int(valor)
+        if not 0 < numero <= 9223372036854775807:  # limite do BIGINT
+            return None
+        if numero not in ids:
+            ids.append(numero)
+    return ids
+
+
+def salvar_vinculos_investigadores(con, caso_id, investigador_ids):
+    """Substitui a equipe do caso pelos investigadores informados.
+
+    Não faz commit nem rollback: quem chama controla a transação, assim o caso
+    e a equipe são gravados juntos (ou nenhum dos dois).
+    Levanta ValueError se algum investigador não existir.
+    """
+    with con.cursor() as cur:
+        if investigador_ids:
+            cur.execute(
+                "SELECT id FROM investigadores WHERE id = ANY(%s)",
+                (investigador_ids,)
+            )
+            existentes = {linha[0] for linha in cur.fetchall()}
+            if existentes != set(investigador_ids):
+                raise ValueError(
+                    "Um ou mais investigadores selecionados não existem."
+                )
+
+        cur.execute(
+            "DELETE FROM caso_investigadores WHERE caso_id = %s",
+            (caso_id,)
+        )
+        for investigador_id in investigador_ids:
+            cur.execute(
+                """
+                INSERT INTO caso_investigadores (caso_id, investigador_id)
+                VALUES (%s, %s)
+                ON CONFLICT DO NOTHING
+                """,
+                (caso_id, investigador_id)
+            )
+
+
+_equipe_pronta = False
+
+
+def garantir_tabelas_equipe():
+    """Cria a tabela da equipe (e as colunas usadas pelos investigadores) se faltarem.
+
+    Roda uma vez por processo. Assim a equipe funciona mesmo que o schema.sql
+    mais novo ainda não tenha sido executado no banco.
+    """
+    global _equipe_pronta
+    if _equipe_pronta or not DATABASE_URL:
+        return
+    try:
+        con = psycopg2.connect(DATABASE_URL, connect_timeout=10)
+    except Exception as erro:
+        print("Não foi possível preparar as tabelas da equipe:", erro)
+        return
+    try:
+        with con.cursor() as cur:
+            cur.execute("ALTER TABLE investigadores ADD COLUMN IF NOT EXISTS matricula TEXT")
+            cur.execute("ALTER TABLE investigadores ADD COLUMN IF NOT EXISTS telefone TEXT")
+            cur.execute(
+                """
+                CREATE TABLE IF NOT EXISTS caso_investigadores (
+                    caso_id BIGINT NOT NULL REFERENCES casos(id) ON DELETE CASCADE,
+                    investigador_id BIGINT NOT NULL REFERENCES investigadores(id) ON DELETE CASCADE,
+                    PRIMARY KEY (caso_id, investigador_id)
+                )
+                """
+            )
+            cur.execute(
+                """
+                CREATE INDEX IF NOT EXISTS idx_caso_investigadores_investigador_id
+                ON caso_investigadores (investigador_id)
+                """
+            )
+        con.commit()
+        _equipe_pronta = True
+    except Exception as erro:
+        con.rollback()
+        print("Não foi possível preparar as tabelas da equipe:", erro)
+    finally:
+        con.close()
+
+
+def buscar_equipe(caso_id):
+    """Investigadores que trabalham no caso, em ordem alfabética."""
+    return consultar(
+        """
+        SELECT i.*
+        FROM investigadores i
+        JOIN caso_investigadores ci ON ci.investigador_id = i.id
+        WHERE ci.caso_id = %s
+        ORDER BY i.nome
+        """,
+        (caso_id,)
+    )
+
+
 @app.before_request
 def proteger_paginas():
     paginas_publicas = {"home", "login", "arquivos_js", "static"}
@@ -181,6 +293,8 @@ def proteger_paginas():
     if "usuario_id" not in session:
         flash("Faça login para acessar essa página.", "erro")
         return redirect(url_for("login"))
+
+    garantir_tabelas_equipe()
 
 
 
@@ -258,19 +372,8 @@ def detalhes_caso(caso_id):
     if not caso:
         return "Caso não encontrado", 404
 
-    investigadores_vinculados = consultar(
-        """
-        SELECT investigador_id
-        FROM caso_investigadores
-        WHERE caso_id = %s
-        """,
-        (caso_id,)
-    )
-
-    investigadores_vinculados_ids = [
-        item["investigador_id"]
-        for item in investigadores_vinculados
-    ]
+    equipe = buscar_equipe(caso_id)
+    investigadores_vinculados_ids = [item["id"] for item in equipe]
 
     return render_template(
         "detalhes_caso.html",
@@ -290,7 +393,8 @@ def detalhes_caso(caso_id):
         investigadores=consultar(
             "SELECT * FROM investigadores ORDER BY nome"
         ),
-        investigadores_vinculados_ids=investigadores_vinculados_ids
+        investigadores_vinculados_ids=investigadores_vinculados_ids,
+        equipe=equipe
     )
 
 @app.route("/investigador/<int:investigador_id>")
@@ -339,7 +443,23 @@ def salvar_equipe_caso(caso_id):
 
         salvar_vinculos_investigadores(con, caso_id, investigador_ids)
         con.commit()
-        flash("Equipe do caso atualizada com sucesso.", "ok")
+
+        # Confirma lendo de volta do banco, para ter certeza de que gravou.
+        with con.cursor() as cur:
+            cur.execute(
+                "SELECT COUNT(*) FROM caso_investigadores WHERE caso_id = %s",
+                (caso_id,)
+            )
+            gravados = cur.fetchone()[0]
+
+        if gravados != len(investigador_ids):
+            flash("A equipe foi enviada, mas não foi possível confirmar a gravação.", "erro")
+        elif gravados == 0:
+            flash("Equipe removida: o caso está sem investigadores.", "ok")
+        elif gravados == 1:
+            flash("Equipe salva: 1 investigador no caso.", "ok")
+        else:
+            flash(f"Equipe salva: {gravados} investigadores no caso.", "ok")
     except ValueError as erro:
         con.rollback()
         flash(str(erro), "erro")
@@ -544,7 +664,8 @@ def exportar_pdf_caso(caso_id):
         caso,
         suspeitos,
         evidencias,
-        testemunhas
+        testemunhas,
+        equipe=buscar_equipe(caso_id)
     )
 
     return send_file(
@@ -585,18 +706,97 @@ def exportar_pdf_investigador(investigador_id):
 
 @app.route("/exportar-pdf-suspeitos")
 def exportar_pdf_suspeitos():
-    dados = consultar("SELECT nome, cpf FROM suspeitos ORDER BY id")
-    lista = [
-        f"{x['nome'] or 'Não informado'} (CPF: {x['cpf'] or 'Não informado'})"
-        for x in dados
-    ]
-
-    return send_file(
-        criar_pdf(lista),
-        mimetype="application/pdf",
-        as_attachment=True,
-        download_name="relatorio_suspeitos.pdf"
+    dados = consultar("SELECT * FROM suspeitos ORDER BY id")
+    arquivo = criar_pdf_registro(
+        "Relatorio de Suspeitos",
+        dados,
+        [("ID", "id"), ("Nome", "nome"), ("CPF", "cpf"),
+         ("Data de nascimento", "data_nascimento"), ("Endereco", "endereco"),
+         ("Caso ID", "caso_id")]
     )
+    return send_file(arquivo, mimetype="application/pdf", as_attachment=True,
+                     download_name="relatorio_suspeitos.pdf")
+
+
+@app.route("/exportar-pdf-suspeito/<int:registro_id>")
+def exportar_pdf_suspeito(registro_id):
+    dados = consultar("SELECT * FROM suspeitos WHERE id = %s", (registro_id,))
+    if not dados:
+        return "Suspeito nao encontrado", 404
+    arquivo = criar_pdf_registro("Ficha do Suspeito", dados,
+        [("ID", "id"), ("Nome", "nome"), ("CPF", "cpf"),
+         ("Data de nascimento", "data_nascimento"), ("Endereco", "endereco"),
+         ("Caso ID", "caso_id")])
+    return send_file(arquivo, mimetype="application/pdf", as_attachment=True,
+                     download_name=f"suspeito_{registro_id}.pdf")
+
+
+@app.route("/exportar-pdf-casos")
+def exportar_pdf_casos():
+    dados = consultar("SELECT * FROM casos ORDER BY id")
+    arquivo = criar_pdf_registro("Relatorio de Casos", dados,
+        [("ID", "id"), ("Titulo", "titulo"), ("Tipo de crime", "tipo_crime"),
+         ("Descricao", "descricao")])
+    return send_file(arquivo, mimetype="application/pdf", as_attachment=True,
+                     download_name="relatorio_casos.pdf")
+
+
+@app.route("/exportar-pdf-investigadores")
+def exportar_pdf_investigadores():
+    dados = consultar("SELECT * FROM investigadores ORDER BY id")
+    arquivo = criar_pdf_registro("Relatorio de Investigadores", dados,
+        [("ID", "id"), ("Nome", "nome"), ("Matricula", "matricula"),
+         ("Cargo", "cargo"), ("Telefone", "telefone"), ("Email", "email")])
+    return send_file(arquivo, mimetype="application/pdf", as_attachment=True,
+                     download_name="relatorio_investigadores.pdf")
+
+
+@app.route("/exportar-pdf-evidencias")
+def exportar_pdf_evidencias():
+    dados = consultar("SELECT * FROM evidencias ORDER BY id")
+    arquivo = criar_pdf_registro("Relatorio de Evidencias", dados,
+        [("ID", "id"), ("Descricao", "descricao"), ("Tipo", "tipo"),
+         ("Local encontrada", "local_encontrada"), ("Data da coleta", "data_coleta"),
+         ("Caso ID", "caso_id")])
+    return send_file(arquivo, mimetype="application/pdf", as_attachment=True,
+                     download_name="relatorio_evidencias.pdf")
+
+
+@app.route("/exportar-pdf-testemunhas")
+def exportar_pdf_testemunhas():
+    dados = consultar("SELECT * FROM testemunhas ORDER BY id")
+    arquivo = criar_pdf_registro("Relatorio de Testemunhas", dados,
+        [("ID", "id"), ("Nome", "nome"), ("Telefone", "telefone"),
+         ("Endereco", "endereco"), ("Depoimento", "depoimento"),
+         ("Caso ID", "caso_id")])
+    return send_file(arquivo, mimetype="application/pdf", as_attachment=True,
+                     download_name="relatorio_testemunhas.pdf")
+
+
+@app.route("/exportar-pdf-evidencia/<int:registro_id>")
+def exportar_pdf_evidencia(registro_id):
+    dados = consultar("SELECT * FROM evidencias WHERE id = %s", (registro_id,))
+    if not dados:
+        return "Evidencia nao encontrada", 404
+    arquivo = criar_pdf_registro("Ficha da Evidencia", dados,
+        [("ID", "id"), ("Descricao", "descricao"), ("Tipo", "tipo"),
+         ("Local encontrada", "local_encontrada"), ("Data da coleta", "data_coleta"),
+         ("Caso ID", "caso_id")])
+    return send_file(arquivo, mimetype="application/pdf", as_attachment=True,
+                     download_name=f"evidencia_{registro_id}.pdf")
+
+
+@app.route("/exportar-pdf-testemunha/<int:registro_id>")
+def exportar_pdf_testemunha(registro_id):
+    dados = consultar("SELECT * FROM testemunhas WHERE id = %s", (registro_id,))
+    if not dados:
+        return "Testemunha nao encontrada", 404
+    arquivo = criar_pdf_registro("Ficha da Testemunha", dados,
+        [("ID", "id"), ("Nome", "nome"), ("Telefone", "telefone"),
+         ("Endereco", "endereco"), ("Depoimento", "depoimento"),
+         ("Caso ID", "caso_id")])
+    return send_file(arquivo, mimetype="application/pdf", as_attachment=True,
+                     download_name=f"testemunha_{registro_id}.pdf")
 
 
 @app.route("/js/<path:nome>")

@@ -7,6 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{{ url_for('static', filename='site.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='exportar-pdf.css') }}">
+{% include '_datatables_css.html' %}
 </head>
 <body class="site">
 
@@ -17,13 +19,34 @@
     <h1>Banco de Dados: <span class="red">Casos Policiais</span></h1>
 
     {% if casos %}
-        {% for caso in casos %}
-        <a href="{{ url_for('detalhes_caso', caso_id=caso.id) }}" class="case-card">
-            <h2>Caso #{{ caso.id }} - {{ caso.titulo }}</h2>
-            <p><strong>Tipo de Crime:</strong> {{ caso.tipo_crime }}</p>
-            <p><strong>Descrição:</strong> {{ caso.descricao }}</p>
-        </a>
-        {% endfor %}
+    <div class="pdf-bar">
+        <a href="{{ url_for('exportar_pdf_casos') }}" class="btn-export-pdf">Exportar todos os casos em PDF</a>
+    </div>
+    {% endif %}
+
+    {% if casos %}
+        <div class="tabela-dados">
+            <table class="js-datatable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Título</th>
+                        <th>Tipo de Crime</th>
+                        <th>Descrição</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for caso in casos %}
+                    <tr>
+                        <td>#{{ caso.id }}</td>
+                        <td><a href="{{ url_for('detalhes_caso', caso_id=caso.id) }}">{{ caso.titulo }}</a></td>
+                        <td>{{ caso.tipo_crime }}</td>
+                        <td><span class="col-desc">{{ caso.descricao }}</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     {% else %}
         <p>Nenhum caso registrado no sistema no momento.</p>
     {% endif %}
@@ -34,9 +57,7 @@
 
 </div>
 
- <a href="{{ url_for('exportar_pdf_suspeitos') }}" class="btn-export-pdf">
-    Exportar PDF
-    </a>
+{% include '_datatables_js.html' %}
 
 </body>
-</html>
+</html>

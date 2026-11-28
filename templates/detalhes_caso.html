@@ -136,29 +136,6 @@
             color: #8c8c90;
         }
 
-        .acoes {
-            margin-top: 30px;
-        }
-
-        .btn-export-pdf {
-            display: inline-block;
-            padding: 15px 22px;
-            border: 0;
-            border-radius: 8px;
-            background: #df5151;
-            color: #fff;
-            font-family: inherit;
-            font-size: 14px;
-            font-weight: 700;
-            text-decoration: none;
-            cursor: pointer;
-            transition: .2s;
-        }
-
-        .btn-export-pdf:hover {
-            background: #b81f26;
-            transform: translateY(-2px);
-        }
 
         .equipe-form {
             display: grid;
@@ -166,6 +143,47 @@
             padding: 20px;
             background: #111113;
             border: 1px solid #2a2a2d;
+        }
+
+        .equipe-lista {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 0 0 16px;
+            padding: 0;
+            list-style: none;
+        }
+
+        .equipe-lista a {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            padding: 10px 16px;
+            background: #111113;
+            border: 1px solid #2a2a2d;
+            border-left: 2px solid #e84545;
+            color: #f4f4f2;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background .2s;
+        }
+
+        .equipe-lista a:hover {
+            background: #1b1b1e;
+        }
+
+        .equipe-lista span {
+            color: #8c8c90;
+            font-size: 12px;
+        }
+
+        .equipe-vazia {
+            margin-bottom: 16px;
+        }
+
+        .equipe-dica {
+            color: #8c8c90;
+            font-size: 12px;
         }
 
         .equipe-form label {
@@ -206,6 +224,7 @@
 
         
     </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='exportar-pdf.css') }}">
 </head>
 
 <body>
@@ -232,6 +251,10 @@
 
         <div class="linha"></div>
 
+        <div class="pdf-bar">
+            <a href="{{ url_for('exportar_pdf_caso', caso_id=caso.id) }}" class="btn-export-pdf">Exportar este caso em PDF</a>
+        </div>
+
         <section class="informacoes">
 
             <p>
@@ -248,8 +271,24 @@
 
         <section>
             <h2 class="secao-titulo"><span>00.</span> Equipe do caso</h2>
+
+            {% if equipe %}
+                <ul class="equipe-lista" aria-label="Investigadores deste caso">
+                    {% for membro in equipe %}
+                        <li>
+                            <a href="{{ url_for('detalhes_investigador', investigador_id=membro.id) }}">
+                                <strong>{{ membro.nome }}</strong>
+                                {% if membro.cargo %}<span>{{ membro.cargo }}</span>{% endif %}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="vazio equipe-vazia">Nenhum investigador vinculado a este caso ainda.</p>
+            {% endif %}
             <form action="{{ url_for('salvar_equipe_caso', caso_id=caso.id) }}" method="POST" class="equipe-form">
                 <label for="investigador_ids">Selecione os investigadores que trabalharam neste caso</label>
+                <small class="equipe-dica">Segure Ctrl (⌘ no Mac) para marcar mais de um. Sem ninguém marcado, a equipe fica vazia.</small>
                 <select id="investigador_ids" name="investigador_ids" multiple size="4">
                     {% for investigador in investigadores %}
                         <option value="{{ investigador.id }}"
@@ -258,15 +297,16 @@
                         </option>
                     {% endfor %}
                 </select>
-                <button type="submit" class="btn-export-pdf">Salvar equipe</button>
+                <button type="submit" class="btn-solid">Salvar equipe</button>
             </form>
         </section>
 
         <section>
 
-            <h2 class="secao-titulo">
-                <span>01.</span> Suspeitos
-            </h2>
+            <div class="secao-cab">
+                <h2 class="secao-titulo"><span>01.</span> Suspeitos</h2>
+                <a href="{{ url_for('exportar_pdf_suspeitos') }}" class="btn-export-pdf btn-export-pdf--sm">Todos os suspeitos</a>
+            </div>
 
             <div class="lista">
 
@@ -290,9 +330,10 @@
 
         <section>
 
-            <h2 class="secao-titulo">
-                <span>02.</span> Evidências
-            </h2>
+            <div class="secao-cab">
+                <h2 class="secao-titulo"><span>02.</span> Evidências</h2>
+                <a href="{{ url_for('exportar_pdf_evidencias') }}" class="btn-export-pdf btn-export-pdf--sm">Todas as evidências</a>
+            </div>
 
             <div class="lista">
 
@@ -316,9 +357,10 @@
 
         <section>
 
-            <h2 class="secao-titulo">
-                <span>03.</span> Testemunhas
-            </h2>
+            <div class="secao-cab">
+                <h2 class="secao-titulo"><span>03.</span> Testemunhas</h2>
+                <a href="{{ url_for('exportar_pdf_testemunhas') }}" class="btn-export-pdf btn-export-pdf--sm">Todas as testemunhas</a>
+            </div>
 
             <div class="lista">
 
@@ -340,14 +382,6 @@
 
         </section>
 
-        <div class="acoes">
-            <a
-                href="{{ url_for('exportar_pdf_caso', caso_id=caso.id) }}"
-                class="btn-export-pdf"
-            >
-                Exportar este caso em PDF
-            </a>
-        </div>
 
     </main>
 

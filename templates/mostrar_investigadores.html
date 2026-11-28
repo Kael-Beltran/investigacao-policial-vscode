@@ -9,10 +9,9 @@
 
 <link rel="stylesheet" href="{{ url_for('static', filename='investigadores.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='site.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='exportar-pdf.css') }}">
 
-<style>
-
-</style>
+{% include '_datatables_css.html' %}
 </head>
 <body class="site">
 
@@ -23,15 +22,41 @@
     <h1>Banco de Dados: <span class="red">Investigadores</span></h1>
 
     {% if investigadores %}
-        {% for inv in investigadores %}
-        <a class="investigator-card" href="{{ url_for('detalhes_investigador', investigador_id=inv.id) }}">
-            <h3>{{ inv.nome }}</h3>
-            <p><strong>ID / Badge:</strong> {{ inv.id }}</p>
-            <p><strong>Cargo / Patente:</strong> {{ inv.cargo }}</p>
-            <p><strong>Email:</strong> {{ inv.email }}</p>
-            <p>Ver casos trabalhados →</p>
-        </a>
-        {% endfor %}
+    <div class="pdf-bar">
+        <a class="btn-export-pdf" href="{{ url_for('exportar_pdf_investigadores') }}">Exportar todos os investigadores em PDF</a>
+    </div>
+    {% endif %}
+
+    {% if investigadores %}
+        <div class="tabela-dados">
+            <table class="js-datatable">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Cargo</th>
+                        <th>Matrícula</th>
+                        <th>Email</th>
+                        <th>Telefone</th>
+                        <th class="no-sort">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for inv in investigadores %}
+                    <tr>
+                        <td><a href="{{ url_for('detalhes_investigador', investigador_id=inv.id) }}">{{ inv.nome }}</a></td>
+                        <td>{{ inv.cargo or '—' }}</td>
+                        <td>{{ inv.matricula or '—' }}</td>
+                        <td>{{ inv.email or '—' }}</td>
+                        <td>{{ inv.telefone or '—' }}</td>
+                        <td>
+                            <a class="inv-link" href="{{ url_for('detalhes_investigador', investigador_id=inv.id) }}">Ver casos →</a>
+                            <a class="btn-export-pdf btn-export-pdf--sm" href="{{ url_for('exportar_pdf_investigador', investigador_id=inv.id) }}">PDF</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     {% else %}
         <p>Nenhum investigador registrado no sistema no momento.</p>
     {% endif %}
@@ -39,9 +64,9 @@
     <a class="back-btn" href="{{ url_for('home') }}">Voltar à Página Inicial
         <span><svg width="18" height="12" viewBox="0 0 18 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M0 6h16M11 1l5 5-5 5"/></svg></span>
     </a>
-   
-    
 </div>
 
+{% include '_datatables_js.html' %}
+
 </body>
-</html>
+</html>

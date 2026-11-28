@@ -1,0 +1,142 @@
+/* ==========================================================================
+   Botões de exportar PDF — estilo único para o site inteiro.
+   Carregue DEPOIS dos outros .css da página.
+
+   Classes:
+     .btn-export-pdf          botão padrão (contorno vermelho, ícone de PDF)
+     .btn-export-pdf--sm      versão compacta (títulos de seção)
+     .btn-solid               botão sólido (ações que não são PDF, ex.: Salvar)
+     .pdf-bar                 barra de ações logo abaixo do título da página
+     .secao-cab               título de seção + botão à direita
+   ========================================================================== */
+
+:root {
+  --pdf-red: #e84545;
+  --pdf-red-dark: #b81f26;
+  --pdf-ink: #f4f4f2;
+  --pdf-line: #2a2a2d;
+}
+
+/* ---------- Botão padrão ---------- */
+body .btn-export-pdf {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 0;
+  padding: 12px 20px;
+  border: 1px solid var(--pdf-red);
+  border-radius: 0;
+  background: transparent;
+  color: var(--pdf-ink);
+  font: 600 12.5px/1 "Manrope", sans-serif;
+  letter-spacing: .04em;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background .2s, border-color .2s, color .2s;
+}
+
+body .btn-export-pdf::before {
+  content: "";
+  flex: none;
+  width: 15px;
+  height: 15px;
+  background: currentColor;
+  -webkit-mask: var(--pdf-icone) center / contain no-repeat;
+  mask: var(--pdf-icone) center / contain no-repeat;
+  --pdf-icone: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3v12M7 10l5 5 5-5M4 20h16'/%3E%3C/svg%3E");
+}
+
+/* garante a cor do texto mesmo dentro de tabelas/cartões (que herdam cor) */
+body a.btn-export-pdf.btn-export-pdf {
+  color: var(--pdf-ink);
+}
+
+body a.btn-export-pdf.btn-export-pdf:hover {
+  color: #fff;
+}
+
+body .btn-export-pdf:hover {
+  background: var(--pdf-red);
+  border-color: var(--pdf-red);
+  color: #fff;
+  transform: none;
+}
+
+body .btn-export-pdf:focus-visible {
+  outline: 2px solid var(--pdf-red);
+  outline-offset: 3px;
+}
+
+/* ---------- Versão compacta ---------- */
+body .btn-export-pdf--sm {
+  padding: 8px 14px;
+  font-size: 11.5px;
+}
+
+body .btn-export-pdf--sm::before {
+  width: 13px;
+  height: 13px;
+}
+
+/* ---------- Botão sólido (não é PDF) ---------- */
+body .btn-solid {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 13px 22px;
+  border: 1px solid var(--pdf-red);
+  border-radius: 0;
+  background: var(--pdf-red);
+  color: #fff;
+  font: 600 12.5px/1 "Manrope", sans-serif;
+  letter-spacing: .04em;
+  cursor: pointer;
+  transition: background .2s, border-color .2s;
+}
+
+body .btn-solid:hover {
+  background: var(--pdf-red-dark);
+  border-color: var(--pdf-red-dark);
+  transform: none;
+}
+
+/* ---------- Barra de ações (abaixo do título) ---------- */
+.pdf-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 0 28px;
+  grid-column: 1 / -1; /* ocupa a linha toda quando a página usa grade */
+}
+
+/* ---------- Página do caso ---------- */
+.secao-cab {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 35px 0 18px;
+}
+
+.secao-cab .secao-titulo {
+  margin: 0;
+}
+
+/* ---------- Telas pequenas ---------- */
+@media (max-width: 600px) {
+  .pdf-bar {
+    flex-direction: column;
+  }
+
+  .pdf-bar .btn-export-pdf {
+    width: 100%;
+  }
+
+  .secao-cab .btn-export-pdf {
+    width: 100%;
+  }
+}

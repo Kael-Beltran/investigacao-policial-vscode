@@ -14,6 +14,11 @@
 
     <link
         rel="stylesheet"
+        href="{{ url_for('static', filename='site.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
         href="{{ url_for('static', filename='adicionar_evidencia.css') }}"
     >
 
@@ -22,18 +27,18 @@
 <body class="site">
 
     {% set ativo = 'adicionar' %}
-{% include '_cabecalho.html' %}
+    {% include '_cabecalho.html' %}
 
-<div class="page-back">
-    <a
+    <main class="page-shell">
+
+        <div class="page-back">
+            <a
                 href="{{ url_for('pagina_adicionar_informacoes') }}"
                 class="back-link"
             >
                 Voltar ao painel <span>↗</span>
             </a>
-</div>
-
-<main class="page-shell">
+        </div>
 
 
         
@@ -291,4 +296,4 @@
 
 </body>
 
-</html>
+</html>
