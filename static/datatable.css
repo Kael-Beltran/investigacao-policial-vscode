@@ -1,4 +1,3 @@
-/* Tabelas com pesquisa (DataTables) no tema escuro do site. Carregue por último. */
 .tabela-dados {
   width: 100%;
   margin-top: 8px;
@@ -44,7 +43,6 @@
 .tabela-dados table.js-datatable tbody td a { color: #fff; font-weight: 600; }
 .tabela-dados table.js-datatable tbody td a:hover { color: #e84545; }
 
-/* números/datas alinhados à esquerda como o resto */
 .tabela-dados .dt-type-numeric,
 .tabela-dados .dt-type-date { text-align: left !important; }
 .tabela-dados th.dt-type-numeric div.dt-column-header,
@@ -58,7 +56,6 @@
   -webkit-box-orient: vertical;
 }
 
-/* controles: pesquisa, quantidade, info e paginação */
 .dt-container { color: #8c8c90; font-size: 13px; }
 .dt-container .dt-layout-row { margin: 0 0 12px; }
 .dt-container .dt-layout-row:last-child { margin: 12px 0 8px; }
@@ -118,7 +115,6 @@
 
 .dt-container .dt-paging button.dt-paging-button.disabled { opacity: .35; cursor: default; }
 
-/* setas de ordenação */
 table.js-datatable thead > tr > th.dt-orderable-asc:hover,
 table.js-datatable thead > tr > th.dt-orderable-desc:hover { outline: none; background: #2a2a2e; }
 

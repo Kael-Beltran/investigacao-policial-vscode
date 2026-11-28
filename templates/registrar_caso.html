@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -30,8 +29,6 @@ rel="stylesheet"href="{{ url_for('static', filename='site.css') }}">
 </div>
 
 <main class="page-shell">
-
-        
 
         <section class="form-card">
 
@@ -69,7 +66,6 @@ rel="stylesheet"href="{{ url_for('static', filename='site.css') }}">
                         >
                     </div>
 
-                    <!-- Tipo de ocorrência -->
                     <div class="field">
                         <label for="tipo">Tipo de ocorrência <span>*</span></label>
 
@@ -84,7 +80,6 @@ rel="stylesheet"href="{{ url_for('static', filename='site.css') }}">
                         </select>
                     </div>
 
-                    <!-- Campo para tipo personalizado -->
                     <div class="field field-full" id="outroTipoContainer" hidden>
 
                         <label for="outroTipo">
@@ -205,7 +200,6 @@ rel="stylesheet"href="{{ url_for('static', filename='site.css') }}">
 
     </main>
 
-    <!-- Controle do campo Outro -->
     <script>
         const tipoSelect = document.getElementById("tipo");
         const outroContainer = document.getElementById("outroTipoContainer");
@@ -253,8 +247,6 @@ rel="stylesheet"href="{{ url_for('static', filename='site.css') }}">
             this.setCustomValidity("");
         });
     </script>
-
-
 
 </body>
 </html>

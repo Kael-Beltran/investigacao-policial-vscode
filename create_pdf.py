@@ -136,7 +136,7 @@ def criar_pdf_caso(caso, suspeitos, evidencias, testemunhas, equipe=None):
     pdf.set_font("Helvetica", size=11)
 
     def texto_seguro(valor):
-        # As fontes padrão do PDF só aceitam caracteres latin-1.
+
         return str(valor).encode("latin-1", "replace").decode("latin-1")
 
     if equipe:

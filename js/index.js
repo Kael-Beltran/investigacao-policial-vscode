@@ -1,4 +1,3 @@
-// Skyline noturno gerado por código (substitua por uma imagem sua se preferir)
 (function(){
   var svg=document.getElementById('skyline'),s=7,out='';
   function r(){s=(s*9301+49297)%233280;return s/233280}

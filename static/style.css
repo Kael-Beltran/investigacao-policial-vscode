@@ -40,10 +40,6 @@ a{
   text-decoration:none;
 }
 
-/* ==========================================
-   BARRA DE NAVEGAÇÃO (usada nas páginas internas)
-========================================== */
-
 .nav{
   position:relative;
   z-index:5;
@@ -96,10 +92,6 @@ a{
   outline:2px solid var(--red);
   outline-offset:4px;
 }
-
-/* ==========================================
-   SEÇÃO "SOBRE"
-========================================== */
 
 .sobre{
   max-width:1200px;
@@ -167,16 +159,12 @@ a{
   color:var(--red);
 }
 
-/* ==========================================
-   SEÇÃO "POR QUE NOS ESCOLHER"
-========================================== */
-
 .diferenciais{
   position:relative;
   padding:clamp(80px,14vw,200px) clamp(var(--space-sm),3.5vw,var(--space-lg)) clamp(56px,8vw,96px);
   background:
     linear-gradient(90deg,rgba(0,0,0,.85),rgba(0,0,0,.35) 60%,rgba(0,0,0,.85)),
-    /* Foto de fundo opcional: salve a imagem em static/img/ e adicione-a aqui como url */
+
     #050505;
 }
 
@@ -284,13 +272,8 @@ a{
   html{scroll-behavior:auto}
 }
 
-
-/* Tipografia e paleta unificadas com a capa */
 html, body { font-family: "Manrope", sans-serif; }
 body { background-color: #0c0c0d; color: #f4f4f2; }
-
-
-/* Ajuste de ícones */
 
 .icon-text,
 .nav-item,

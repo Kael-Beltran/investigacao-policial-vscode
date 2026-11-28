@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -17,7 +16,6 @@
       <link
 rel="stylesheet"href="{{ url_for('static', filename='site.css') }}">
 
-
   <script src="{{ url_for('arquivos_js', nome='cadastrar_suspeito.js') }}" defer></script>
 </head>
 
@@ -26,7 +24,6 @@ rel="stylesheet"href="{{ url_for('static', filename='site.css') }}">
   {% set ativo = 'adicionar' %}
   {% include '_cabecalho.html' %}
 
-  <!-- MENSAGENS DO FLASK -->
   {% with mensagens = get_flashed_messages(with_categories=true) %}
     {% if mensagens %}
       <div class="mensagens-container">
@@ -188,7 +185,6 @@ rel="stylesheet"href="{{ url_for('static', filename='site.css') }}">
 
   </main>
 
-  <!-- LIMITES DE DATA E CPF -->
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       const nascimento = document.getElementById("nascimento");

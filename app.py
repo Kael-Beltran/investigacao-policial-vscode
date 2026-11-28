@@ -16,7 +16,7 @@ except ImportError:
 
 app = Flask(__name__)
 
-# Em produção, configure SECRET_KEY nas variáveis de ambiente da Vercel.
+
 app.secret_key = os.getenv("SECRET_KEY")
 if not app.secret_key:
     if os.getenv("VERCEL"):
@@ -57,7 +57,7 @@ def validar_cpf(cpf):
     if cpf == cpf[0] * 11:
         return False
 
-    # Calcula o primeiro dígito verificador
+
     soma = sum(
         int(cpf[i]) * (10 - i)
         for i in range(9)
@@ -69,7 +69,7 @@ def validar_cpf(cpf):
     if digito1 != int(cpf[9]):
         return False
 
-    # Calcula o segundo dígito verificador
+
     soma = sum(
         int(cpf[i]) * (11 - i)
         for i in range(10)
@@ -92,11 +92,11 @@ def validar_data_nascimento(data_texto):
 
     hoje = date.today()
 
-    # Impede datas futuras
+
     if nascimento > hoje:
         return False
 
-    # Limite de 120 anos
+
     ano_limite = hoje.year - 120
     mes_limite = hoje.month
     dia_limite = min(
@@ -183,7 +183,7 @@ def ids_investigadores_form():
         if not re.fullmatch(r"[0-9]+", valor):
             return None
         numero = int(valor)
-        if not 0 < numero <= 9223372036854775807:  # limite do BIGINT
+        if not 0 < numero <= 9223372036854775807:
             return None
         if numero not in ids:
             ids.append(numero)
@@ -295,9 +295,6 @@ def proteger_paginas():
         return redirect(url_for("login"))
 
     garantir_tabelas_equipe()
-
-
-
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -444,7 +441,7 @@ def salvar_equipe_caso(caso_id):
         salvar_vinculos_investigadores(con, caso_id, investigador_ids)
         con.commit()
 
-        # Confirma lendo de volta do banco, para ter certeza de que gravou.
+
         with con.cursor() as cur:
             cur.execute(
                 "SELECT COUNT(*) FROM caso_investigadores WHERE caso_id = %s",
@@ -564,12 +561,12 @@ def salvar_suspeito():
     endereco = campo("endereco")
     caso_id = campo("caso_id")
 
-    # Verifica o CPF
+
     if not validar_cpf(cpf):
         flash("CPF inválido! Digite um CPF com dígitos verificadores válidos.", "erro")
         return redirect(url_for("pagina_novo_suspeito"))
 
-    # Verifica a data de nascimento
+
     if not validar_data_nascimento(nascimento):
         flash(
             "Data de nascimento inválida! Informe uma data entre hoje e 120 anos atrás.",
@@ -577,7 +574,7 @@ def salvar_suspeito():
         )
         return redirect(url_for("pagina_novo_suspeito"))
 
-    # Realiza o cadastro
+
     ok = executar(
         """
         INSERT INTO suspeitos
@@ -805,13 +802,11 @@ def arquivos_js(nome):
         os.path.join(app.root_path, "js"),
         nome
     )
-    
+
 
 @app.route("/novo-investigador")
 def pagina_novo_investigador():
     return render_template("cadastrar_investigador.html")
-
-
 
 
 @app.route("/salvar-investigador", methods=["POST"])
@@ -841,8 +836,6 @@ def salvar_investigador():
         return redirect(url_for("pagina_investigadores"))
 
     return redirect(url_for("pagina_novo_investigador"))
-
-
 
 
 if __name__ == "__main__":

@@ -1,15 +1,3 @@
-/* ==========================================================================
-   Botões de exportar PDF — estilo único para o site inteiro.
-   Carregue DEPOIS dos outros .css da página.
-
-   Classes:
-     .btn-export-pdf          botão padrão (contorno vermelho, ícone de PDF)
-     .btn-export-pdf--sm      versão compacta (títulos de seção)
-     .btn-solid               botão sólido (ações que não são PDF, ex.: Salvar)
-     .pdf-bar                 barra de ações logo abaixo do título da página
-     .secao-cab               título de seção + botão à direita
-   ========================================================================== */
-
 :root {
   --pdf-red: #e84545;
   --pdf-red-dark: #b81f26;
@@ -17,7 +5,6 @@
   --pdf-line: #2a2a2d;
 }
 
-/* ---------- Botão padrão ---------- */
 body .btn-export-pdf {
   display: inline-flex;
   align-items: center;
@@ -48,7 +35,6 @@ body .btn-export-pdf::before {
   --pdf-icone: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3v12M7 10l5 5 5-5M4 20h16'/%3E%3C/svg%3E");
 }
 
-/* garante a cor do texto mesmo dentro de tabelas/cartões (que herdam cor) */
 body a.btn-export-pdf.btn-export-pdf {
   color: var(--pdf-ink);
 }
@@ -69,7 +55,6 @@ body .btn-export-pdf:focus-visible {
   outline-offset: 3px;
 }
 
-/* ---------- Versão compacta ---------- */
 body .btn-export-pdf--sm {
   padding: 8px 14px;
   font-size: 11.5px;
@@ -80,7 +65,6 @@ body .btn-export-pdf--sm::before {
   height: 13px;
 }
 
-/* ---------- Botão sólido (não é PDF) ---------- */
 body .btn-solid {
   display: inline-flex;
   align-items: center;
@@ -103,16 +87,14 @@ body .btn-solid:hover {
   transform: none;
 }
 
-/* ---------- Barra de ações (abaixo do título) ---------- */
 .pdf-bar {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
   margin: 0 0 28px;
-  grid-column: 1 / -1; /* ocupa a linha toda quando a página usa grade */
+  grid-column: 1 / -1;
 }
 
-/* ---------- Página do caso ---------- */
 .secao-cab {
   display: flex;
   flex-wrap: wrap;
@@ -126,7 +108,6 @@ body .btn-solid:hover {
   margin: 0;
 }
 
-/* ---------- Telas pequenas ---------- */
 @media (max-width: 600px) {
   .pdf-bar {
     flex-direction: column;

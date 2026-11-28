@@ -5,12 +5,10 @@ const cpfInput = document.querySelector('#cpf');
 const birthInput = document.querySelector('#nascimento');
 const message = document.querySelector('#formMessage');
 
-// Impede selecionar uma data de nascimento futura.
 if (birthInput) {
   birthInput.max = new Date().toISOString().split('T')[0];
 }
 
-// Aplica a máscara 000.000.000-00 enquanto o usuário digita.
 cpfInput?.addEventListener('input', (event) => {
   const digits = event.target.value.replace(/\D/g, '').slice(0, 11);
   let formatted = digits;
@@ -27,7 +25,6 @@ cpfInput?.addEventListener('input', (event) => {
   event.target.classList.remove('invalid');
 });
 
-// Remove o destaque de erro assim que o usuário corrige um campo.
 form?.querySelectorAll('input').forEach((input) => {
   input.addEventListener('input', () => input.classList.remove('invalid'));
   input.addEventListener('change', () => input.classList.remove('invalid'));
@@ -65,7 +62,5 @@ form?.addEventListener('submit', (event) => {
     return;
   }
 
-  // Tudo certo: envia o formulário de verdade para o Flask (/salvar-suspeito).
-  // form.submit() não dispara o evento "submit" de novo, então não há laço.
   form.submit();
 });
